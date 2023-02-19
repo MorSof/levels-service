@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Resource } from '../models/resource.model';
 import { ResourcesProvider } from '../providers/resources-provider.service';
 
 @Injectable()
 export class ResourcesService {
-  constructor(private readonly resourcesProvider: ResourcesProvider) {}
+  constructor(
+    private readonly resourcesProvider: ResourcesProvider
+  ) {}
 
   async create(resource: Resource[], levelId: number): Promise<Resource[]> {
     return this.resourcesProvider.createResources(resource, levelId);

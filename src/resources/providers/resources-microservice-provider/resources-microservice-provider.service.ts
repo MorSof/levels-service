@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ResourcesProvider } from '../resources-provider.service';
 import { Resource } from '../../models/resource.model';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ResourcesMicroserviceProvider extends ResourcesProvider {
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    @Inject('RESOURCES_BASE_URL') private readonly RESOURCES_BASE_URL: string,
+  ) {
     super();
   }
 
@@ -13,6 +14,7 @@ export class ResourcesMicroserviceProvider extends ResourcesProvider {
     resource: Resource[],
     levelId: number,
   ): Promise<Resource[]> {
+    console.log(this.RESOURCES_BASE_URL)
     return undefined;
   }
 

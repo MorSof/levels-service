@@ -3,9 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Level } from '../models/level.model';
 import { LevelsEntityConverter } from './levels-entity.converter';
-import { LevelEntity } from "../entities/level.entity";
-import { ResourcesService } from "../../resources/services/resources.service";
-import { Resource } from '../../resources/models/resource.model';
+import { LevelEntity } from '../entities/level.entity';
+import { ResourcesService } from '../../resources/services/resources.service';
 
 @Injectable()
 export class LevelsService {
