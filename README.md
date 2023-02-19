@@ -2,7 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://t3.ftcdn.net/jpg/02/05/78/12/360_F_205781253_acxA4jXNLyZN3XLFb7h3ySrXAlksPvXq.jpg" /></a>
 </p>
 
-## Rings Quest Backend
+## Levels Service
 
 ### Run all services with docker compose
 
@@ -28,9 +28,9 @@ On the first time running this, the app container should be failed:
 
 Now all the containers should work!
 
-The service is exposed on http://localhost:3555
+The service is exposed on http://localhost:3001
 
-OpenApi (Swagger) is exposed here http://localhost:3555/api
+OpenApi (Swagger) is exposed here http://localhost:3001/api
 
 
 ## Development
