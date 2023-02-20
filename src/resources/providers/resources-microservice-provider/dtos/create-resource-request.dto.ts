@@ -1,5 +1,5 @@
 export class CreateResourceRequestDto {
-  ownerId: string;
+  ownerId: number;
   ownerType: string;
   type: string;
   name: string;
@@ -7,4 +7,8 @@ export class CreateResourceRequestDto {
   receivingProbability: number;
   rarenessProbability: number;
   extraArgs: Record<string, any>;
+
+  constructor(partial: Partial<CreateResourceRequestDto>) {
+    Object.assign(this, partial);
+  }
 }
