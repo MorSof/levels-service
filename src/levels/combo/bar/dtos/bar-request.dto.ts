@@ -5,12 +5,14 @@ export class BarRequestDto {
   @ApiModelProperty({
     type: 'number',
     description: 'The goal of the bar',
+    required: true,
   })
   goal: number;
 
   @ApiModelProperty({
     type: ResourceRequestDto,
     isArray: true,
+    required: false,
   })
-  rewards: ResourceRequestDto[];
+  resources?: ResourceRequestDto[];
 }

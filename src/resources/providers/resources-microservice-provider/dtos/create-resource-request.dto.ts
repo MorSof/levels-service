@@ -3,7 +3,8 @@ export class CreateResourceRequestDto {
   ownerType: string;
   type: string;
   name: string;
-  amount: number;
+  groupId: string;
+  amount?: number;
   receivingProbability: number;
   rarenessProbability: number;
   extraArgs: Record<string, any>;

@@ -5,6 +5,10 @@ import { Level } from '../models/level.model';
 import { LevelsEntityConverter } from './levels-entity.converter';
 import { LevelEntity } from '../entities/level.entity';
 import { ResourcesService } from '../../resources/services/resources.service';
+import { LevelResourcesGroups } from '../../resources/models/level-resources-groups.enum';
+import { Bar } from '../combo/bar/models/bar.model';
+import { Goal } from '../goals/models/goal.model';
+import { Resource } from '../../resources/models/resource.model';
 
 @Injectable()
 export class LevelsService {
@@ -19,46 +23,67 @@ export class LevelsService {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       id,
     });
-    return this.levelsEntityConverter.convertFrom(levelEntity);
+    return this.levelsEntityConverter.toModel(levelEntity);
   }
 
   public async findAll(): Promise<Level[]> {
     const levelEntities: LevelEntity[] = await this.levelsRepository.find();
     return levelEntities?.map((levelEntity) =>
-      this.levelsEntityConverter.convertFrom(levelEntity),
+      this.levelsEntityConverter.toModel(levelEntity),
     );
   }
 
   public async create(level: Level): Promise<Level> {
-    for (const bar of level.combo.bars) {
-      bar.rewards = await this.resourcesService.create(bar.rewards, level.id);
+    const resourcesToCreate: Resource[] = [];
+    for (let i = 0; i < level.combo.bars.length; i++) {
+      const bar: Bar = level.combo.bars[i];
+      bar.resources.forEach(
+        (resource) =>
+          (resource.groupId = `${LevelResourcesGroups.COMBO_BAR_REWARDS}-${i}`),
+      );
+      resourcesToCreate.push(...bar.resources);
     }
-    for (const goal of level.goals) {
-      goal.rewards = await this.resourcesService.create(goal.rewards, level.id);
+    for (let i = 0; i < level.goals.length; i++) {
+      const goal: Goal = level.goals[i];
+      goal.resources.forEach(
+        (resource) =>
+          (resource.groupId = `${LevelResourcesGroups.GOALS_REWARDS}-${i}`),
+      );
+      resourcesToCreate.push(...goal.resources);
     }
-    let levelEntity: LevelEntity = this.levelsEntityConverter.convertTo(level);
-    levelEntity = await this.levelsRepository.save(levelEntity);
-    return this.levelsEntityConverter.convertFrom(levelEntity);
-  }
+    const resourcesResponse: Resource[] = await this.resourcesService.create(
+      resourcesToCreate,
+      level.id,
+    );
 
-  public async createAll(levels: Level[]): Promise<Level[]> {
-    let levelEntities: LevelEntity[] = levels?.map((level) =>
-      this.levelsEntityConverter.convertTo(level),
-    );
-    levelEntities = await this.levelsRepository.save(levelEntities);
-    return levelEntities?.map((levelEntity) =>
-      this.levelsEntityConverter.convertFrom(levelEntity),
-    );
+    let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
+    levelEntity = await this.levelsRepository.save(levelEntity);
+    level = this.levelsEntityConverter.toModel(levelEntity);
+    this.injectResourcesByGroups(resourcesResponse, level);
+    return level;
   }
 
   public async update(id: number, level: Level): Promise<Level> {
     level.id = id;
-    let levelEntity: LevelEntity = this.levelsEntityConverter.convertTo(level);
+    let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
     levelEntity = await this.levelsRepository.save(levelEntity);
-    return this.levelsEntityConverter.convertFrom(levelEntity);
+    return this.levelsEntityConverter.toModel(levelEntity);
   }
 
   public async remove(id: number): Promise<void> {
     await this.levelsRepository.delete({ id });
+  }
+
+  private injectResourcesByGroups(resources: Resource[], level: Level): void {
+    for (const resource of resources) {
+      if (resource.groupId) {
+        const split = resource.groupId.split('-');
+        if (split[0] == LevelResourcesGroups.COMBO_BAR_REWARDS) {
+          level.combo.bars[split[1]].resources = resource;
+        } else if (split[0] == LevelResourcesGroups.GOALS_REWARDS) {
+          level.goals[split[1]].resources = resource;
+        }
+      }
+    }
   }
 }

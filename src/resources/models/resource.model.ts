@@ -1,11 +1,8 @@
-import { ResourceType } from './resourceTypes.enum';
-import { CurrencyNamesEnum } from './currencyNamesEnum';
-import { BoosterNamesEnum } from './boosterNamesEnum';
-
 export class Resource {
-  id?: number;
-  type?: ResourceType;
-  name?: CurrencyNamesEnum | BoosterNamesEnum;
+  id: number;
+  groupId?: string;
+  type: string;
+  name: string;
   amount?: number;
   receivingProbability?: number;
   rarenessProbability?: number;

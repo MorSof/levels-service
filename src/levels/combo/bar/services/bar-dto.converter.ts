@@ -9,17 +9,17 @@ export class BarDtoConverter {
   constructor(private readonly resourcesDtoConverter: ResourcesDtoConverter) {}
 
   public convertFrom(barRequestDto: BarRequestDto): Bar {
-    const { goal, rewards } = barRequestDto;
+    const { goal, resources } = barRequestDto;
     return new Bar({
       goal,
-      rewards: rewards.map((reward) =>
-        this.resourcesDtoConverter.convertFrom(reward),
+      resources: resources.map((resource) =>
+        this.resourcesDtoConverter.convertFrom(resource),
       ),
     });
   }
 
   public convertTo(bar: Bar): BarResponseDto {
-    const { goal, rewards } = bar;
-    return new BarResponseDto({ goal, rewards });
+    const { goal, resources } = bar;
+    return new BarResponseDto({ goal, resources });
   }
 }

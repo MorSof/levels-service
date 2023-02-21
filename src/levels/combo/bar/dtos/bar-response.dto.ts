@@ -5,17 +5,15 @@ export class BarResponseDto {
   @ApiModelProperty({
     type: 'number',
     description: 'The goal of the bar',
-    required: true,
   })
   goal: number;
 
   @ApiModelProperty({
     type: ResourceResponseDto,
-    description: 'The rewards of the bar',
+    description: 'The resources of the bar',
     isArray: true,
-    required: true,
   })
-  rewards: ResourceResponseDto[];
+  resources?: ResourceResponseDto[];
 
   constructor(partial: Partial<BarResponseDto>) {
     Object.assign(this, partial);

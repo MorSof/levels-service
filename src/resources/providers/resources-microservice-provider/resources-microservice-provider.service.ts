@@ -3,9 +3,7 @@ import { ResourcesProvider } from '../resources-provider.service';
 import { Resource } from '../../models/resource.model';
 import { HttpService } from '@nestjs/axios';
 import { ResourceResponseDto } from './dtos/resource-response.dto';
-import { ResourceType } from '../../models/resourceTypes.enum';
 import { firstValueFrom } from 'rxjs';
-import { CurrencyNamesEnum } from '../../models/currencyNamesEnum';
 import { CreateResourceRequestDto } from './dtos/create-resource-request.dto';
 
 @Injectable()
@@ -24,16 +22,25 @@ export class ResourcesMicroserviceProvider extends ResourcesProvider {
     levelId: number,
   ): Promise<Resource[]> {
     const body: CreateResourceRequestDto[] = resources.map((resource) => {
-      const { type, name, amount, receivingProbability, rarenessProbability } =
-        resource;
-      return new CreateResourceRequestDto({
-        ownerId: levelId,
-        ownerType: 'LEVEL',
+      const {
         type,
         name,
         amount,
+        groupId,
         receivingProbability,
         rarenessProbability,
+        extraArgs,
+      } = resource;
+      return new CreateResourceRequestDto({
+        ownerId: levelId,
+        ownerType: 'level',
+        type,
+        name,
+        groupId,
+        amount,
+        receivingProbability,
+        rarenessProbability,
+        extraArgs,
       });
     });
 
@@ -47,11 +54,13 @@ export class ResourcesMicroserviceProvider extends ResourcesProvider {
       (dto) =>
         new Resource({
           id: dto.id,
-          type: ResourceType[dto.type.toUpperCase()],
-          name: CurrencyNamesEnum[dto.name.toUpperCase()],
+          type: dto.type,
+          name: dto.name,
+          groupId: dto.groupId,
           amount: dto.amount,
           receivingProbability: dto.receivingProbability,
           rarenessProbability: dto.rarenessProbability,
+          extraArgs: dto.extraArgs,
         }),
     );
   }

@@ -1,30 +1,18 @@
-import { ResourceType } from '../models/resourceTypes.enum';
-import { CurrencyNamesEnum } from '../models/currencyNamesEnum';
-import { IsEnum } from 'class-validator';
-import { BoosterNamesEnum } from '../models/boosterNamesEnum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResourceResponseDto {
   @ApiProperty()
-  id?: number;
+  id: number;
 
   @ApiProperty({
-    enum: Object.values(ResourceType),
-    description: 'The type of the resource',
-    required: true,
+    description: 'The type of the resource'
   })
-  type?: ResourceType;
+  type: string;
 
-  @IsEnum(CurrencyNamesEnum)
   @ApiProperty({
-    enum: [
-      ...Object.values(CurrencyNamesEnum),
-      ...Object.values(BoosterNamesEnum),
-    ],
     description: 'The name of the resource',
-    required: true,
   })
-  name?: CurrencyNamesEnum | BoosterNamesEnum;
+  name: string;
 
   @ApiProperty({
     nullable: true,

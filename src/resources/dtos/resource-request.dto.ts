@@ -1,29 +1,25 @@
-import { ResourceType } from '../models/resourceTypes.enum';
-import { CurrencyNamesEnum } from '../models/currencyNamesEnum';
-import { IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResourceRequestDto {
-  @IsEnum(ResourceType)
   @ApiProperty({
-    enum: Object.values(ResourceType),
     description: 'The type of the resource',
+    default: 'currency',
   })
-  readonly type: ResourceType;
+  readonly type: string;
 
-  @IsEnum(CurrencyNamesEnum)
   @ApiProperty({
-    enum: [...Object.values(CurrencyNamesEnum)],
     description: 'The name of the resource',
+    default: 'coins',
   })
-  readonly name: CurrencyNamesEnum;
+  readonly name: string;
 
   @ApiProperty({
     type: 'number',
     required: false,
     nullable: true,
+    default: null,
   })
-  readonly amount: number;
+  readonly amount?: number;
 
   @ApiProperty({
     type: 'number',
@@ -31,6 +27,7 @@ export class ResourceRequestDto {
     nullable: true,
     minimum: 0,
     maximum: 1,
+    default: 1,
   })
   readonly receivingProbability: number;
 
@@ -40,6 +37,7 @@ export class ResourceRequestDto {
     nullable: true,
     minimum: 0,
     maximum: 1,
+    default: 0.5,
   })
   readonly rarenessProbability: number;
 

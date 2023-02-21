@@ -4,12 +4,11 @@ export class ResourceResponseDto {
   ownerType: string;
   type: string;
   name: string;
-  amount: number;
-  receivingProbability: number;
-  rarenessProbability: number;
-  extraArgs: object;
-  updatedAt: Date;
-  createdAt: Date;
+  groupId: string;
+  amount?: number;
+  receivingProbability?: number;
+  rarenessProbability?: number;
+  extraArgs?: object;
 
   constructor(partial: Partial<ResourceResponseDto>) {
     Object.assign(this, partial);

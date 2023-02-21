@@ -31,14 +31,12 @@ export class LevelEntity {
   combo: {
     bars: {
       goal: number;
-      resourcesIds: number[];
     }[];
   };
 
   @Column({ nullable: true, type: 'json' })
   goals: {
     score: number;
-    resourcesIds: number[];
   }[];
 
   @Column({ nullable: true, type: 'json' })

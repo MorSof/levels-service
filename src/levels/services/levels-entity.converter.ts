@@ -4,58 +4,29 @@ import { LevelEntity } from '../entities/level.entity';
 
 @Injectable()
 export class LevelsEntityConverter {
-  public convertFrom(levelEntity: LevelEntity): Level {
-    const { id, playables, lives, stats } = levelEntity;
+  public toModel(levelEntity: LevelEntity): Level {
+    const { id, playables, lives, stats, combo, goals } = levelEntity;
     const level: Level = new Level({
       id,
       playables,
       lives,
-      combo: { bars: [] },
-      goals: [],
+      combo,
+      goals,
       stats,
     });
-
-    for (const bar of levelEntity.combo.bars) {
-      level.combo.bars.push({
-        goal: bar.goal,
-        rewards: bar.resourcesIds.map((resourceId) => {
-          return { id: resourceId };
-        }),
-      });
-    }
-    for (const goal of levelEntity.goals) {
-      level.goals.push({
-        score: goal.score,
-        rewards: goal.resourcesIds.map((resourceId) => {
-          return { id: resourceId };
-        }),
-      });
-    }
     return level;
   }
 
-  public convertTo(level: Level): LevelEntity {
-    const { id, playables, lives, stats } = level;
+  public toEntity(level: Level): LevelEntity {
+    const { id, playables, lives, stats, combo, goals } = level;
     const levelEntity: LevelEntity = new LevelEntity({
       id,
       playables,
-      combo: { bars: [] },
-      goals: [],
+      combo,
+      goals,
       lives,
       stats,
     });
-    for (const bar of level.combo.bars) {
-      levelEntity.combo.bars.push({
-        goal: bar.goal,
-        resourcesIds: bar.rewards.map((resource) => resource.id),
-      });
-    }
-    for (const goal of level.goals) {
-      levelEntity.goals.push({
-        score: goal.score,
-        resourcesIds: goal.rewards.map((resource) => resource.id),
-      });
-    }
     return levelEntity;
   }
 }
