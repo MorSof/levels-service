@@ -29,7 +29,7 @@ export class LevelsController {
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<LevelResponseDto> {
     const level: Level = await this.levelsService.findOne(id);
-    return this.levelsDtoConverterService.convertTo(level);
+    return this.levelsDtoConverterService.toDto(level);
   }
 
   @ApiOkResponse({
@@ -41,7 +41,7 @@ export class LevelsController {
   async findAll(): Promise<LevelResponseDto[]> {
     const levels: Level[] = await this.levelsService.findAll();
     return levels.map((level) =>
-      this.levelsDtoConverterService.convertTo(level),
+      this.levelsDtoConverterService.toDto(level),
     );
   }
 
@@ -54,9 +54,9 @@ export class LevelsController {
     @Body() levelRequestDto: LevelRequestDto,
   ): Promise<LevelResponseDto> {
     const level: Level = await this.levelsService.create(
-      this.levelsDtoConverterService.convertFrom(levelRequestDto),
+      this.levelsDtoConverterService.toModel(levelRequestDto),
     );
-    return this.levelsDtoConverterService.convertTo(level);
+    return this.levelsDtoConverterService.toDto(level);
   }
 
   @ApiOkResponse({
@@ -70,9 +70,9 @@ export class LevelsController {
   ): Promise<LevelResponseDto> {
     const level: Level = await this.levelsService.update(
       id,
-      this.levelsDtoConverterService.convertFrom(levelRequestDto),
+      this.levelsDtoConverterService.toModel(levelRequestDto),
     );
-    return this.levelsDtoConverterService.convertTo(level);
+    return this.levelsDtoConverterService.toDto(level);
   }
 
   @Delete(':id')

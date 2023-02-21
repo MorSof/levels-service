@@ -4,9 +4,6 @@ import { GoalRequestDto } from '../goals/dtos/goal-request.dto';
 import { PlayableRequestDto } from '../playable/dtos/playable-request.dto';
 
 export class LevelRequestDto {
-  @ApiModelProperty({ type: 'integer', description: 'The ID of the level' })
-  id: number;
-
   @ApiModelProperty({
     isArray: true,
     type: PlayableRequestDto,

@@ -6,8 +6,6 @@ import { LevelsEntityConverter } from './levels-entity.converter';
 import { LevelEntity } from '../entities/level.entity';
 import { ResourcesService } from '../../resources/services/resources.service';
 import { LevelResourcesGroups } from '../../resources/models/level-resources-groups.enum';
-import { Bar } from '../combo/bar/models/bar.model';
-import { Goal } from '../goals/models/goal.model';
 import { Resource } from '../../resources/models/resource.model';
 
 @Injectable()
@@ -34,31 +32,12 @@ export class LevelsService {
   }
 
   public async create(level: Level): Promise<Level> {
-    const resourcesToCreate: Resource[] = [];
-    for (let i = 0; i < level.combo.bars.length; i++) {
-      const bar: Bar = level.combo.bars[i];
-      bar.resources.forEach(
-        (resource) =>
-          (resource.groupId = `${LevelResourcesGroups.COMBO_BAR_REWARDS}-${i}`),
-      );
-      resourcesToCreate.push(...bar.resources);
-    }
-    for (let i = 0; i < level.goals.length; i++) {
-      const goal: Goal = level.goals[i];
-      goal.resources.forEach(
-        (resource) =>
-          (resource.groupId = `${LevelResourcesGroups.GOALS_REWARDS}-${i}`),
-      );
-      resourcesToCreate.push(...goal.resources);
-    }
-    const resourcesResponse: Resource[] = await this.resourcesService.create(
-      resourcesToCreate,
-      level.id,
-    );
-
     let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
     levelEntity = await this.levelsRepository.save(levelEntity);
     level = this.levelsEntityConverter.toModel(levelEntity);
+
+    const resourcesResponse: Resource[] =
+      await this.resourcesService.createLevelResources(level);
     this.injectResourcesByGroups(resourcesResponse, level);
     return level;
   }

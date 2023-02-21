@@ -9,6 +9,7 @@ import { CreateResourceRequestDto } from './dtos/create-resource-request.dto';
 @Injectable()
 export class ResourcesMicroserviceProvider extends ResourcesProvider {
   private readonly CREATE_RESOURCE_PATH: string = '/v1/resources';
+  private readonly GET_RESOURCE_PATH: string = '/v1/resources';
 
   constructor(
     @Inject('RESOURCES_BASE_URL') private readonly RESOURCES_BASE_URL: string,
