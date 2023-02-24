@@ -1,10 +1,10 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { ResourceRequestDto } from '../../../resources/dtos/resource-request.dto';
 
-export class GoalRequestDto {
+export class BarRequestDto {
   @ApiModelProperty({
     type: 'number',
-    description: 'The score of the goal',
+    description: 'The goal of the bar',
     required: true,
   })
   score: number;

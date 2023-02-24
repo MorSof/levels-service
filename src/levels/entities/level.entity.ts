@@ -30,7 +30,7 @@ export class LevelEntity {
   @Column('json')
   combo: {
     bars: {
-      goal: number;
+      score: number;
     }[];
   };
 

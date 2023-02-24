@@ -1,7 +1,7 @@
-import { Resource } from '../../../../resources/models/resource.model';
+import { Resource } from "../../../resources/models/resource.model";
 
 export class Bar {
-  goal: number;
+  score: number;
   resources?: Resource[];
 
   constructor(partial: Partial<Bar>) {

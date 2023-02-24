@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ComboRequestDto } from '../dtos/combo-request.dto';
 import { Combo } from '../models/combo.model';
 import { ComboResponseDto } from '../dtos/combo-response.dto';
-import { BarDtoConverter } from '../bar/services/bar-dto.converter';
+import { BarDtoConverter } from '../../bar/services/bar-dto.converter';
 
 @Injectable()
 export class ComboDtoConverter {

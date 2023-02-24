@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { Bar } from '../models/bar.model';
 import { BarRequestDto } from '../dtos/bar-request.dto';
 import { BarResponseDto } from '../dtos/bar-response.dto';
-import { ResourcesDtoConverter } from '../../../../resources/convertes/resources-dto.converter';
+import { ResourcesDtoConverter } from '../../../resources/convertes/resources-dto.converter';
 
 @Injectable()
 export class BarDtoConverter {
   constructor(private readonly resourcesDtoConverter: ResourcesDtoConverter) {}
 
   public convertFrom(barRequestDto: BarRequestDto): Bar {
-    const { goal, resources } = barRequestDto;
+    const { score, resources } = barRequestDto;
     return new Bar({
-      goal,
+      score,
       resources: resources.map((resource) =>
         this.resourcesDtoConverter.convertFrom(resource),
       ),
@@ -19,7 +19,7 @@ export class BarDtoConverter {
   }
 
   public convertTo(bar: Bar): BarResponseDto {
-    const { goal, resources } = bar;
-    return new BarResponseDto({ goal, resources });
+    const { score, resources } = bar;
+    return new BarResponseDto({ score, resources });
   }
 }

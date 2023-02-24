@@ -19,8 +19,8 @@ export class PlayableDtoConverter {
     });
   }
 
-  public convertTo(goal: Playable): PlayableResponseDto {
-    const { type, subType, name, duration, cooldown, vertices, score } = goal;
+  public convertTo(playable: Playable): PlayableResponseDto {
+    const { type, subType, name, duration, cooldown, vertices, score } = playable;
     return new PlayableResponseDto({
       type,
       subType,

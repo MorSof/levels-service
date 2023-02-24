@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { BarModule } from './bar/bar.module';
 import { ComboDtoConverter } from './services/combo-dto.converter';
+import { BarModule } from '../bar/bar.module';
 
 @Module({
   imports: [BarModule],

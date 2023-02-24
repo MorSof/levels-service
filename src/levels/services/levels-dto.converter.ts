@@ -3,14 +3,14 @@ import { Level } from '../models/level.model';
 import { LevelRequestDto } from '../dtos/level-request.dto';
 import { LevelResponseDto } from '../dtos/level-response.dto';
 import { ComboDtoConverter } from '../combo/services/combo-dto.converter';
-import { GoalDtoConverter } from '../goals/services/goal-dto.converter';
 import { PlayableDtoConverter } from '../playable/services/playable-dto-converter.service';
+import { BarDtoConverter } from '../bar/services/bar-dto.converter';
 
 @Injectable()
 export class LevelsDtoConverter {
   constructor(
     private readonly comboDtoConverter: ComboDtoConverter,
-    private readonly goalDtoConverter: GoalDtoConverter,
+    private readonly barDtoConverter: BarDtoConverter,
     private readonly playableDtoConverter: PlayableDtoConverter,
   ) {}
 
@@ -22,7 +22,7 @@ export class LevelsDtoConverter {
       ),
       lives,
       combo: this.comboDtoConverter.convertFrom(combo),
-      goals: goals.map((goal) => this.goalDtoConverter.convertFrom(goal)),
+      goals: goals.map((goal) => this.barDtoConverter.convertFrom(goal)),
     });
   }
 

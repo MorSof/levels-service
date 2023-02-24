@@ -1,5 +1,5 @@
-import { BarResponseDto } from '../bar/dtos/bar-response.dto';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import { BarResponseDto } from '../../bar/dtos/bar-response.dto';
 
 export class ComboResponseDto {
   @ApiModelProperty({

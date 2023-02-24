@@ -21,7 +21,11 @@ export class LevelsService {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       id,
     });
-    return this.levelsEntityConverter.toModel(levelEntity);
+    const level = this.levelsEntityConverter.toModel(levelEntity);
+    const resourcesResponse: Resource[] =
+      await this.resourcesService.getResourcesByLevelId(level.id);
+    this.injectResourcesByGroups(resourcesResponse, level);
+    return level;
   }
 
   public async findAll(): Promise<Level[]> {

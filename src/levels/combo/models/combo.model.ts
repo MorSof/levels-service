@@ -1,4 +1,4 @@
-import { Bar } from '../bar/models/bar.model';
+import { Bar } from '../../bar/models/bar.model';
 
 export class Combo {
   bars: Bar[];

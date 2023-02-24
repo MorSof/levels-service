@@ -1,7 +1,7 @@
 import { ComboResponseDto } from '../combo/dtos/combo-response.dto';
-import { GoalResponseDto } from '../goals/dtos/goal-response.dto';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { PlayableResponseDto } from '../playable/dtos/playable-response.dto';
+import { BarResponseDto } from '../bar/dtos/bar-response.dto';
 
 export class LevelResponseDto {
   @ApiModelProperty({
@@ -40,10 +40,10 @@ export class LevelResponseDto {
 
   @ApiModelProperty({
     isArray: true,
-    type: GoalResponseDto,
+    type: BarResponseDto,
     description: 'An array of goals for the level',
   })
-  goals: GoalResponseDto[];
+  goals: BarResponseDto[];
 
   @ApiModelProperty({
     type: ComboResponseDto,

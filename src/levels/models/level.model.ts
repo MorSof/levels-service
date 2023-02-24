@@ -1,7 +1,7 @@
 import { Stats } from './stats.model';
-import { Goal } from '../goals/models/goal.model';
 import { Combo } from '../combo/models/combo.model';
 import { Playable } from '../playable/models/playable.model';
+import { Bar } from '../bar/models/bar.model';
 
 export class Level {
   id: number;
@@ -9,7 +9,7 @@ export class Level {
   lives: number;
   combo: Combo;
   stats?: Stats;
-  goals: Goal[];
+  goals: Bar[];
 
   constructor(partial: Partial<Level>) {
     Object.assign(this, partial);

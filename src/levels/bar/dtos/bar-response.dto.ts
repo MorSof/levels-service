@@ -1,21 +1,21 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { ResourceResponseDto } from '../../../resources/dtos/resource-response.dto';
 
-export class GoalResponseDto {
+export class BarResponseDto {
   @ApiModelProperty({
-    type: 'string',
-    description: 'The score to achieve the goal',
+    type: 'number',
+    description: 'The goal of the bar',
   })
   score: number;
 
   @ApiModelProperty({
     type: ResourceResponseDto,
-    description: 'The resources you achieve when winning the goal',
+    description: 'The resources of the bar',
     isArray: true,
   })
   resources?: ResourceResponseDto[];
 
-  constructor(partial: Partial<GoalResponseDto>) {
+  constructor(partial: Partial<BarResponseDto>) {
     Object.assign(this, partial);
   }
 }

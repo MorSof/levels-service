@@ -5,6 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { ResourceResponseDto } from './dtos/resource-response.dto';
 import { firstValueFrom } from 'rxjs';
 import { CreateResourceRequestDto } from './dtos/create-resource-request.dto';
+import { GetResourcesRequestDto } from './dtos/get-resources-request.dto';
 
 @Injectable()
 export class ResourcesMicroserviceProvider extends ResourcesProvider {
@@ -67,6 +68,28 @@ export class ResourcesMicroserviceProvider extends ResourcesProvider {
   }
 
   async getResourcesByLevelId(levelId: number): Promise<Resource[]> {
-    return undefined;
+    const getResourcesRequestDto: GetResourcesRequestDto = {
+      ownerId: levelId,
+      ownerType: 'level',
+    };
+    const { data } = await firstValueFrom(
+      this.httpService.get<ResourceResponseDto[]>(
+        `${this.RESOURCES_BASE_URL}${this.CREATE_RESOURCE_PATH}`,
+        { params: getResourcesRequestDto },
+      ),
+    );
+    return data.map(
+      (dto) =>
+        new Resource({
+          id: dto.id,
+          type: dto.type,
+          name: dto.name,
+          groupId: dto.groupId,
+          amount: dto.amount,
+          receivingProbability: dto.receivingProbability,
+          rarenessProbability: dto.rarenessProbability,
+          extraArgs: dto.extraArgs,
+        }),
+    );
   }
 }

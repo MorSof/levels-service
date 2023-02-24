@@ -5,10 +5,10 @@ import { LevelsService } from './services/levels.service';
 import { LevelsEntityConverter } from './services/levels-entity.converter';
 import { LevelsDtoConverter } from './services/levels-dto.converter';
 import { ComboModule } from './combo/combo.module';
-import { GoalModule } from './goals/goal.module';
 import { PlayableModule } from './playable/playable.module';
 import { LevelEntity } from './entities/level.entity';
 import { ResourceModule } from '../resources/resource.module';
+import { BarModule } from './bar/bar.module';
 
 @Module({
   controllers: [LevelsController],
@@ -16,7 +16,7 @@ import { ResourceModule } from '../resources/resource.module';
   imports: [
     TypeOrmModule.forFeature([LevelEntity]),
     ComboModule,
-    GoalModule,
+    BarModule,
     PlayableModule,
     ResourceModule,
   ],
