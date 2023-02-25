@@ -6,10 +6,18 @@ import {
   Body,
   Param,
   Put,
+  Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { LevelsService } from '../services/levels.service';
 import { Level } from '../models/level.model';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { LevelRequestDto } from '../dtos/level-request.dto';
 import { LevelResponseDto } from '../dtos/level-response.dto';
 import { LevelsDtoConverter } from '../services/levels-dto.converter';
@@ -26,9 +34,26 @@ export class LevelsController {
     description: 'The level record',
     type: LevelResponseDto,
   })
+  @ApiNotFoundResponse({ description: 'Level not found' })
+  @ApiQuery({
+    name: 'fulfillResourcesProbabilities',
+    type: Boolean,
+    required: false,
+  })
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<LevelResponseDto> {
-    const level: Level = await this.levelsService.findOne(id);
+  async findOne(
+    @Param('id') id: number,
+    @Query(
+      'fulfillResourcesProbabilities',
+      new DefaultValuePipe(false),
+      ParseBoolPipe,
+    )
+    fulfillResourcesProbabilities: boolean,
+  ): Promise<LevelResponseDto> {
+    const level: Level = await this.levelsService.findOne(
+      id,
+      fulfillResourcesProbabilities,
+    );
     return this.levelsDtoConverterService.toDto(level);
   }
 
@@ -40,9 +65,7 @@ export class LevelsController {
   @Get()
   async findAll(): Promise<LevelResponseDto[]> {
     const levels: Level[] = await this.levelsService.findAll();
-    return levels.map((level) =>
-      this.levelsDtoConverterService.toDto(level),
-    );
+    return levels.map((level) => this.levelsDtoConverterService.toDto(level));
   }
 
   @ApiOkResponse({

@@ -5,5 +5,8 @@ export abstract class ResourcesProvider {
     resource: Resource[],
     levelId: number,
   ): Promise<Resource[]>;
-  abstract getResourcesByLevelId(levelId: number): Promise<Resource[]>;
+  abstract getResourcesByLevelId(
+    levelId: number,
+    fulfillResourcesProbabilities: boolean,
+  ): Promise<Resource[]>;
 }

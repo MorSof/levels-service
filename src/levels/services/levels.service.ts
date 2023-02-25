@@ -17,13 +17,19 @@ export class LevelsService {
     private readonly resourcesService: ResourcesService,
   ) {}
 
-  public async findOne(id: number): Promise<Level> {
+  public async findOne(
+    id: number,
+    fulfillResourcesProbabilities: boolean,
+  ): Promise<Level> {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       id,
     });
     const level = this.levelsEntityConverter.toModel(levelEntity);
     const resourcesResponse: Resource[] =
-      await this.resourcesService.getResourcesByLevelId(level.id);
+      await this.resourcesService.getResourcesByLevelId(
+        level.id,
+        fulfillResourcesProbabilities,
+      );
     this.injectResourcesByGroups(resourcesResponse, level);
     return level;
   }

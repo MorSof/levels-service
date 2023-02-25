@@ -67,11 +67,17 @@ export class ResourcesMicroserviceProvider extends ResourcesProvider {
     );
   }
 
-  async getResourcesByLevelId(levelId: number): Promise<Resource[]> {
+  async getResourcesByLevelId(
+    levelId: number,
+    fulfillResourcesProbabilities: boolean,
+  ): Promise<Resource[]> {
     const getResourcesRequestDto: GetResourcesRequestDto = {
       ownerId: levelId,
       ownerType: 'level',
     };
+    if (fulfillResourcesProbabilities) {
+      getResourcesRequestDto.fulfillProbability = fulfillResourcesProbabilities;
+    }
     const { data } = await firstValueFrom(
       this.httpService.get<ResourceResponseDto[]>(
         `${this.RESOURCES_BASE_URL}${this.CREATE_RESOURCE_PATH}`,

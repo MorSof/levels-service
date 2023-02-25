@@ -23,8 +23,14 @@ export class ResourcesService {
     return this.resourcesProvider.createResources(resourcesToCreate, level.id);
   }
 
-  async getResourcesByLevelId(levelId: number): Promise<Resource[]> {
-    return this.resourcesProvider.getResourcesByLevelId(levelId);
+  async getResourcesByLevelId(
+    levelId: number,
+    fulfillResourcesProbabilities: boolean,
+  ): Promise<Resource[]> {
+    return this.resourcesProvider.getResourcesByLevelId(
+      levelId,
+      fulfillResourcesProbabilities,
+    );
   }
 
   private addGroupIdPerBar(
