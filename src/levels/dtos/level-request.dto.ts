@@ -5,6 +5,13 @@ import { BarRequestDto } from '../bar/dtos/bar-request.dto';
 
 export class LevelRequestDto {
   @ApiModelProperty({
+    type: 'number',
+    description: 'The level order',
+    required: true,
+  })
+  order: number;
+
+  @ApiModelProperty({
     isArray: true,
     type: PlayableRequestDto,
     description: 'An array of playables for the level',

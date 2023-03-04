@@ -5,6 +5,7 @@ import { Bar } from '../bar/models/bar.model';
 
 export class Level {
   id: number;
+  order: number;
   playables: Playable[];
   lives: number;
   combo: Combo;

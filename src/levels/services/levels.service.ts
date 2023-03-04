@@ -17,12 +17,29 @@ export class LevelsService {
     private readonly resourcesService: ResourcesService,
   ) {}
 
-  public async findOne(
+  public async findOneById(
     id: number,
-    fulfillResourcesProbabilities: boolean,
+    fulfillResourcesProbabilities?: boolean,
   ): Promise<Level> {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       id,
+    });
+    const level = this.levelsEntityConverter.toModel(levelEntity);
+    const resourcesResponse: Resource[] =
+      await this.resourcesService.getResourcesByLevelId(
+        level.id,
+        fulfillResourcesProbabilities,
+      );
+    this.injectResourcesByGroups(resourcesResponse, level);
+    return level;
+  }
+
+  public async findOneByLevelOrder(
+    order: number,
+    fulfillResourcesProbabilities?: boolean,
+  ): Promise<Level> {
+    const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
+      order,
     });
     const level = this.levelsEntityConverter.toModel(levelEntity);
     const resourcesResponse: Resource[] =
@@ -53,7 +70,6 @@ export class LevelsService {
   }
 
   public async update(id: number, level: Level): Promise<Level> {
-    level.id = id;
     let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
     levelEntity = await this.levelsRepository.save(levelEntity);
     return this.levelsEntityConverter.toModel(levelEntity);

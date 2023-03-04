@@ -5,9 +5,10 @@ import { LevelEntity } from '../entities/level.entity';
 @Injectable()
 export class LevelsEntityConverter {
   public toModel(levelEntity: LevelEntity): Level {
-    const { id, playables, lives, stats, combo, goals } = levelEntity;
+    const { id, order, playables, lives, stats, combo, goals } = levelEntity;
     const level: Level = new Level({
       id,
+      order,
       playables,
       lives,
       combo,
@@ -18,9 +19,10 @@ export class LevelsEntityConverter {
   }
 
   public toEntity(level: Level): LevelEntity {
-    const { id, playables, lives, stats, combo, goals } = level;
+    const { id, order, playables, lives, stats, combo, goals } = level;
     const levelEntity: LevelEntity = new LevelEntity({
       id,
+      order,
       playables,
       combo,
       goals,

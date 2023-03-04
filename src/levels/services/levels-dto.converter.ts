@@ -15,8 +15,9 @@ export class LevelsDtoConverter {
   ) {}
 
   public toModel(levelDto: LevelRequestDto): Level {
-    const { playables, lives, combo, goals } = levelDto;
+    const { order, playables, lives, combo, goals } = levelDto;
     return new Level({
+      order,
       playables: playables.map((playable) =>
         this.playableDtoConverter.convertFrom(playable),
       ),
@@ -27,9 +28,10 @@ export class LevelsDtoConverter {
   }
 
   public toDto(level: Level): LevelResponseDto {
-    const { id, playables, lives, combo, stats, goals } = level;
+    const { id, order, playables, lives, combo, stats, goals } = level;
     return new LevelResponseDto({
       id,
+      order,
       playables,
       lives,
       combo,

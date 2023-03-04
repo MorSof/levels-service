@@ -7,22 +7,25 @@ export class LevelResponseDto {
   @ApiModelProperty({
     type: 'string',
     description: 'The id of the level',
-    required: true,
   })
   id: number;
+
+  @ApiModelProperty({
+    type: 'number',
+    description: 'The level order',
+  })
+  order: number;
 
   @ApiModelProperty({
     type: PlayableResponseDto,
     description: 'The playables of the level',
     isArray: true,
-    required: true,
   })
   playables: PlayableResponseDto[];
 
   @ApiModelProperty({
     type: 'object',
     description: 'The stats of the level',
-    required: true,
   })
   stats: {
     playables: {
@@ -34,7 +37,6 @@ export class LevelResponseDto {
   @ApiModelProperty({
     type: 'string',
     description: 'The lives of the level',
-    required: true,
   })
   lives: number;
 

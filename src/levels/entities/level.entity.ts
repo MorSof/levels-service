@@ -4,14 +4,21 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'levels' })
+@Unique(['order'])
 export class LevelEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  @Index()
+  order: number;
 
   @Column('json')
   playables: {
