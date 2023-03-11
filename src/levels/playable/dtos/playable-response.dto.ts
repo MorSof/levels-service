@@ -15,9 +15,9 @@ export class PlayableResponseDto {
 
   @ApiModelProperty({
     type: 'number',
-    description: 'The intractableTime of the playable',
+    description: 'The interactableTime of the playable',
   })
-  intractableTime: number;
+  interactableTime?: number;
 
   @ApiModelProperty({
     type: 'number',

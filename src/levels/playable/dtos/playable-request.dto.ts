@@ -15,9 +15,10 @@ export class PlayableRequestDto {
 
   @ApiModelProperty({
     type: 'number',
-    description: 'The intractableTime of the playable',
+    description: 'The interactableTime of the playable',
+    required: false,
   })
-  intractableTime: number;
+  interactableTime?: number;
 
   @ApiModelProperty({
     type: 'number',

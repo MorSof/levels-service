@@ -24,7 +24,7 @@ export class LevelEntity {
   playables: {
     name: string;
     ttl: number;
-    intractableTime: number;
+    interactableTime?: number;
     cooldown: number;
     vertices: number[];
     score: number;
