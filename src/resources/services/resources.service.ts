@@ -33,6 +33,10 @@ export class ResourcesService {
     );
   }
 
+  async removeResourcesByLevelId(levelId: number): Promise<boolean> {
+    return this.resourcesProvider.removeLevelsResources(levelId);
+  }
+
   private addGroupIdPerBar(
     bars: Bar[],
     levelResourcesGroups: LevelResourcesGroups,

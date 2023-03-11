@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Level } from '../models/level.model';
 import { LevelsEntityConverter } from './levels-entity.converter';
 import { LevelEntity } from '../entities/level.entity';
@@ -24,6 +24,9 @@ export class LevelsService {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       id,
     });
+    if (levelEntity == null) {
+      throw new NotFoundException('Level not found');
+    }
     const level = this.levelsEntityConverter.toModel(levelEntity);
     const resourcesResponse: Resource[] =
       await this.resourcesService.getResourcesByLevelId(
@@ -41,6 +44,9 @@ export class LevelsService {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       order,
     });
+    if (levelEntity == null) {
+      throw new NotFoundException('Level not found');
+    }
     const level = this.levelsEntityConverter.toModel(levelEntity);
     const resourcesResponse: Resource[] =
       await this.resourcesService.getResourcesByLevelId(
@@ -71,12 +77,24 @@ export class LevelsService {
 
   public async update(id: number, level: Level): Promise<Level> {
     let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
+    if (levelEntity == null) {
+      throw new NotFoundException('Level not found');
+    }
     levelEntity = await this.levelsRepository.save(levelEntity);
     return this.levelsEntityConverter.toModel(levelEntity);
   }
 
   public async remove(id: number): Promise<void> {
-    await this.levelsRepository.delete({ id });
+    const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
+      id,
+    });
+    if (levelEntity == null) {
+      throw new NotFoundException('Level not found');
+    }
+
+    await this.resourcesService.removeResourcesByLevelId(id);
+
+    await this.levelsRepository.delete(id);
   }
 
   private injectResourcesByGroups(resources: Resource[], level: Level): void {

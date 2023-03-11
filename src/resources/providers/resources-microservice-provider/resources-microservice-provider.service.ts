@@ -11,6 +11,7 @@ import { GetResourcesRequestDto } from './dtos/get-resources-request.dto';
 export class ResourcesMicroserviceProvider extends ResourcesProvider {
   private readonly CREATE_RESOURCE_PATH: string = '/v1/resources';
   private readonly GET_RESOURCE_PATH: string = '/v1/resources';
+  private readonly REMOVE_RESOURCE_PATH: string = '/v1/resources';
 
   constructor(
     @Inject('RESOURCES_BASE_URL') private readonly RESOURCES_BASE_URL: string,
@@ -80,7 +81,7 @@ export class ResourcesMicroserviceProvider extends ResourcesProvider {
     }
     const { data } = await firstValueFrom(
       this.httpService.get<ResourceResponseDto[]>(
-        `${this.RESOURCES_BASE_URL}${this.CREATE_RESOURCE_PATH}`,
+        `${this.RESOURCES_BASE_URL}${this.GET_RESOURCE_PATH}`,
         { params: getResourcesRequestDto },
       ),
     );
@@ -97,5 +98,14 @@ export class ResourcesMicroserviceProvider extends ResourcesProvider {
           extraArgs: dto.extraArgs,
         }),
     );
+  }
+
+  async removeLevelsResources(levelId: number): Promise<boolean> {
+    await firstValueFrom(
+      this.httpService.delete<void>(
+        `${this.RESOURCES_BASE_URL}${this.REMOVE_RESOURCE_PATH}/owner/level/${levelId}`,
+      ),
+    );
+    return true;
   }
 }
