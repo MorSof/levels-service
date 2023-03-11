@@ -1,8 +1,7 @@
 export class Playable {
-  type: string;
-  subType?: string;
   name: string;
-  duration: number;
+  ttl: number;
+  intractableTime: number;
   cooldown: number;
   vertices: number[];
   score: number;

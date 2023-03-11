@@ -22,10 +22,9 @@ export class LevelEntity {
 
   @Column('json')
   playables: {
-    type: string;
     name: string;
-    subType?: string;
-    duration: number;
+    ttl: number;
+    intractableTime: number;
     cooldown: number;
     vertices: number[];
     score: number;

@@ -6,13 +6,11 @@ import { PlayableResponseDto } from '../dtos/playable-response.dto';
 @Injectable()
 export class PlayableDtoConverter {
   public convertFrom(playableRequestDto: PlayableRequestDto): Playable {
-    const { type, subType, name, duration, cooldown, vertices, score } =
-      playableRequestDto;
+    const { name, ttl, intractableTime, cooldown, vertices, score } = playableRequestDto;
     return new Playable({
-      type,
-      subType,
       name,
-      duration,
+      ttl,
+      intractableTime,
       cooldown,
       vertices,
       score,
@@ -20,12 +18,11 @@ export class PlayableDtoConverter {
   }
 
   public convertTo(playable: Playable): PlayableResponseDto {
-    const { type, subType, name, duration, cooldown, vertices, score } = playable;
+    const { name, ttl, intractableTime, cooldown, vertices, score } = playable;
     return new PlayableResponseDto({
-      type,
-      subType,
       name,
-      duration,
+      ttl,
+      intractableTime,
       cooldown,
       vertices,
       score,

@@ -3,27 +3,21 @@ import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-prop
 export class PlayableRequestDto {
   @ApiModelProperty({
     type: 'string',
-    description: 'The type of playable',
-  })
-  type: string;
-
-  @ApiModelProperty({
-    type: 'string',
     description: 'The name of the playable',
   })
   name: string;
 
   @ApiModelProperty({
-    type: 'string',
-    description: 'The subtype of playable',
+    type: 'number',
+    description: 'The ttl of the playable',
   })
-  subType?: string;
+  ttl: number;
 
   @ApiModelProperty({
     type: 'number',
-    description: 'The duration of the playable',
+    description: 'The intractableTime of the playable',
   })
-  duration: number;
+  intractableTime: number;
 
   @ApiModelProperty({
     type: 'number',
