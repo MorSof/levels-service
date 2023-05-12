@@ -7,12 +7,13 @@
 ### Run all services with docker compose
 
 #### Prerequisites
+clone rings-quest-ops from###########
 
 Before you run on docker, make sure that you have the following requirements installed on your system:
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-#### Pull and run from dockerhub
+#### Pull and run from dockerhub in rings-quest-ops
 ```shell
 $ docker-compose pull
 $ docker-compose up
