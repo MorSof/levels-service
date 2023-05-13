@@ -1,4 +1,4 @@
-import { Resource } from "../../../resources/models/resource.model";
+import { Resource } from '../../../resources/models/resource.model';
 
 export class Bar {
   score: number;

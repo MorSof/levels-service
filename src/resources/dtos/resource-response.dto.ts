@@ -5,7 +5,7 @@ export class ResourceResponseDto {
   id: number;
 
   @ApiProperty({
-    description: 'The type of the resource'
+    description: 'The type of the resource',
   })
   type: string;
 
