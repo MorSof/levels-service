@@ -33,18 +33,6 @@ export class LevelEntity {
   @Column()
   lives: number;
 
-  @Column('json')
-  combo: {
-    bars: {
-      score: number;
-    }[];
-  };
-
-  @Column({ nullable: true, type: 'json' })
-  goals: {
-    score: number;
-  }[];
-
   @Column({ nullable: true, type: 'json' })
   stats: {
     playables: {

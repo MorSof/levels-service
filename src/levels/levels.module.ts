@@ -7,8 +7,7 @@ import { LevelsDtoConverter } from './services/levels-dto.converter';
 import { ComboModule } from './combo/combo.module';
 import { PlayableModule } from './playable/playable.module';
 import { LevelEntity } from './entities/level.entity';
-import { ResourceModule } from '../resources/resource.module';
-import { BarModule } from './bar/bar.module';
+import { BarsModule } from '../bars/bars.module';
 
 @Module({
   controllers: [LevelsController],
@@ -16,9 +15,8 @@ import { BarModule } from './bar/bar.module';
   imports: [
     TypeOrmModule.forFeature([LevelEntity]),
     ComboModule,
-    BarModule,
     PlayableModule,
-    ResourceModule,
+    BarsModule,
   ],
   exports: [LevelsService, LevelsEntityConverter, LevelsDtoConverter],
 })

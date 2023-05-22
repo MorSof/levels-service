@@ -5,19 +5,11 @@ import {
   Delete,
   Body,
   Param,
-  Query,
-  DefaultValuePipe,
-  ParseBoolPipe,
   ParseIntPipe,
 } from '@nestjs/common';
 import { LevelsService } from '../services/levels.service';
 import { Level } from '../models/level.model';
-import {
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LevelRequestDto } from '../dtos/level-request.dto';
 import { LevelResponseDto } from '../dtos/level-response.dto';
 import { LevelsDtoConverter } from '../services/levels-dto.converter';
@@ -35,25 +27,11 @@ export class LevelsController {
     type: LevelResponseDto,
   })
   @ApiNotFoundResponse({ description: 'Level not found' })
-  @ApiQuery({
-    name: 'fulfillResourcesProbabilities',
-    type: Boolean,
-    required: false,
-  })
   @Get(':id')
   async getById(
     @Param('id', ParseIntPipe) id: number,
-    @Query(
-      'fulfillResourcesProbabilities',
-      new DefaultValuePipe(false),
-      ParseBoolPipe,
-    )
-    fulfillResourcesProbabilities: boolean,
   ): Promise<LevelResponseDto> {
-    const level: Level = await this.levelsService.findOneById(
-      id,
-      fulfillResourcesProbabilities,
-    );
+    const level: Level = await this.levelsService.findOneById(id);
     return this.levelsDtoConverterService.toDto(level);
   }
 
@@ -62,25 +40,11 @@ export class LevelsController {
     type: LevelResponseDto,
   })
   @ApiNotFoundResponse({ description: 'Level not found' })
-  @ApiQuery({
-    name: 'fulfillResourcesProbabilities',
-    type: Boolean,
-    required: false,
-  })
   @Get('order/:order')
   async getByLevelOrder(
     @Param('order', ParseIntPipe) order: number,
-    @Query(
-      'fulfillResourcesProbabilities',
-      new DefaultValuePipe(false),
-      ParseBoolPipe,
-    )
-    fulfillResourcesProbabilities: boolean,
   ): Promise<LevelResponseDto> {
-    const level: Level = await this.levelsService.findOneByLevelOrder(
-      order,
-      fulfillResourcesProbabilities,
-    );
+    const level: Level = await this.levelsService.findOneByLevelOrder(order);
     return this.levelsDtoConverterService.toDto(level);
   }
 
