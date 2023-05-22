@@ -5,19 +5,11 @@ import {
   Delete,
   Body,
   Param,
-  Query,
-  DefaultValuePipe,
-  ParseBoolPipe,
   ParseIntPipe,
 } from '@nestjs/common';
 import { LevelsService } from '../services/levels.service';
 import { Level } from '../models/level.model';
-import {
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LevelRequestDto } from '../dtos/level-request.dto';
 import { LevelResponseDto } from '../dtos/level-response.dto';
 import { LevelsDtoConverter } from '../services/levels-dto.converter';

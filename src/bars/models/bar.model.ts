@@ -1,5 +1,4 @@
 import { Resource } from '../models/resource.model';
-import { BadRequestException } from '@nestjs/common';
 
 export class Bar {
   id: number;

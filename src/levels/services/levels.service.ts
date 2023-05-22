@@ -7,6 +7,7 @@ import { LevelEntity } from '../entities/level.entity';
 import { BarsService } from '../../bars/services/bars.service';
 import { Bar } from '../../bars/models/bar.model';
 import { Combo } from '../combo/models/combo.model';
+import { LevelBarsType } from '../../bars/models/level-bars.enum';
 
 @Injectable()
 export class LevelsService {
@@ -26,9 +27,7 @@ export class LevelsService {
     }
     const level = this.levelsEntityConverter.toModel(levelEntity);
 
-    // TODO - Fetch bars
-
-    return level;
+    return this.getLevelWithBars(level);
   }
 
   public async findOneByLevelOrder(order: number): Promise<Level> {
@@ -40,15 +39,18 @@ export class LevelsService {
     }
     const level = this.levelsEntityConverter.toModel(levelEntity);
 
-    // TODO - Fetch bars
-
-    return level;
+    return this.getLevelWithBars(level);
   }
 
   public async findAll(): Promise<Level[]> {
     const levelEntities: LevelEntity[] = await this.levelsRepository.find();
-    return levelEntities?.map((levelEntity) =>
-      this.levelsEntityConverter.toModel(levelEntity),
+    return Promise.all(
+      levelEntities?.map(
+        async (levelEntity) =>
+          await this.getLevelWithBars(
+            this.levelsEntityConverter.toModel(levelEntity),
+          ),
+      ),
     );
   }
 
@@ -56,19 +58,23 @@ export class LevelsService {
     let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
     levelEntity = await this.levelsRepository.save(levelEntity);
 
-    const comboBars: Bar[] = await this.barsService.createComboBars(
+    const comboBarsPromise = this.barsService.createBars(
       levelEntity.id,
+      LevelBarsType.COMBO,
       level.combo.bars,
     );
-    const goalsBars: Bar[] = await this.barsService.createGoalsBars(
+    const goalsBarsPromise = this.barsService.createBars(
       levelEntity.id,
+      LevelBarsType.GOALS,
       level.goals,
     );
 
-    level = this.levelsEntityConverter.toModel(levelEntity);
-    level.combo = new Combo({ bars: comboBars });
-    level.goals = goalsBars;
-    return level;
+    const [comboBars, goalsBars] = await Promise.all([
+      comboBarsPromise,
+      goalsBarsPromise,
+    ]);
+
+    return this.loadBarsToLevel(level, comboBars, goalsBars);
   }
 
   public async remove(id: number): Promise<void> {
@@ -82,5 +88,32 @@ export class LevelsService {
     // TODO - Remove bars
 
     await this.levelsRepository.delete(id);
+  }
+
+  private async getLevelWithBars(level: Level): Promise<Level> {
+    const comboBarsPromise = await this.barsService.fetchBars(
+      level.id,
+      LevelBarsType.COMBO,
+    );
+    const goalsBarsPromise = await this.barsService.fetchBars(
+      level.id,
+      LevelBarsType.GOALS,
+    );
+    const [comboBars, goalsBars] = await Promise.all([
+      comboBarsPromise,
+      goalsBarsPromise,
+    ]);
+
+    return this.loadBarsToLevel(level, comboBars, goalsBars);
+  }
+
+  private loadBarsToLevel(
+    level: Level,
+    comboBars: Bar[],
+    goalsBars: Bar[],
+  ): Level {
+    level.combo = new Combo({ bars: comboBars });
+    level.goals = goalsBars;
+    return level;
   }
 }
