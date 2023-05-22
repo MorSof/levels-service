@@ -2,21 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { ComboRequestDto } from '../dtos/combo-request.dto';
 import { Combo } from '../models/combo.model';
 import { ComboResponseDto } from '../dtos/combo-response.dto';
-import { BarDtoConverter } from '../../bar/services/bar-dto.converter';
+import { BarsDtoConverter } from '../../../bars/convertes/bars-dto.converter';
 
 @Injectable()
 export class ComboDtoConverter {
-  constructor(private readonly barDtoConverter: BarDtoConverter) {}
+  constructor(private readonly barDtoConverter: BarsDtoConverter) {}
 
-  public convertFrom(comboRequestDto: ComboRequestDto): Combo {
+  public toModel(comboRequestDto: ComboRequestDto): Combo {
     const { bars } = comboRequestDto;
     return new Combo({
-      bars: bars.map((bar) => this.barDtoConverter.convertFrom(bar)),
+      bars: bars.map((bar) => this.barDtoConverter.toModel(bar)),
     });
   }
 
-  public convertTo(combo: Combo): ComboResponseDto {
+  public toDto(combo: Combo): ComboResponseDto {
     const { bars } = combo;
-    return new ComboResponseDto({ bars });
+    return new ComboResponseDto({
+      bars: bars.map((bar) => this.barDtoConverter.toDto(bar)),
+    });
   }
 }

@@ -4,13 +4,13 @@ import { LevelRequestDto } from '../dtos/level-request.dto';
 import { LevelResponseDto } from '../dtos/level-response.dto';
 import { ComboDtoConverter } from '../combo/services/combo-dto.converter';
 import { PlayableDtoConverter } from '../playable/services/playable-dto-converter.service';
-import { BarDtoConverter } from '../bar/services/bar-dto.converter';
+import { BarsDtoConverter } from '../../bars/convertes/bars-dto.converter';
 
 @Injectable()
 export class LevelsDtoConverter {
   constructor(
     private readonly comboDtoConverter: ComboDtoConverter,
-    private readonly barDtoConverter: BarDtoConverter,
+    private readonly barDtoConverter: BarsDtoConverter,
     private readonly playableDtoConverter: PlayableDtoConverter,
   ) {}
 
@@ -22,8 +22,8 @@ export class LevelsDtoConverter {
         this.playableDtoConverter.convertFrom(playable),
       ),
       lives,
-      combo: this.comboDtoConverter.convertFrom(combo),
-      goals: goals.map((goal) => this.barDtoConverter.convertFrom(goal)),
+      combo: this.comboDtoConverter.toModel(combo),
+      goals: goals.map((goal) => this.barDtoConverter.toModel(goal)),
     });
   }
 
@@ -32,11 +32,13 @@ export class LevelsDtoConverter {
     return new LevelResponseDto({
       id,
       order,
-      playables,
+      playables: playables.map((playable) =>
+        this.playableDtoConverter.convertTo(playable),
+      ),
       lives,
-      combo,
       stats,
-      goals,
+      combo: this.comboDtoConverter.toDto(combo),
+      goals: goals.map((goal) => this.barDtoConverter.toDto(goal)),
     });
   }
 }

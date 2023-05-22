@@ -4,9 +4,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Level } from '../models/level.model';
 import { LevelsEntityConverter } from './levels-entity.converter';
 import { LevelEntity } from '../entities/level.entity';
-import { ResourcesService } from '../../resources/services/resources.service';
-import { LevelResourcesGroups } from '../../resources/models/level-resources-groups.enum';
-import { Resource } from '../../resources/models/resource.model';
+import { BarsService } from '../../bars/services/bars.service';
+import { Bar } from '../../bars/models/bar.model';
+import { Combo } from '../combo/models/combo.model';
 
 @Injectable()
 export class LevelsService {
@@ -14,13 +14,10 @@ export class LevelsService {
     @InjectRepository(LevelEntity)
     private readonly levelsRepository: Repository<LevelEntity>,
     private readonly levelsEntityConverter: LevelsEntityConverter,
-    private readonly resourcesService: ResourcesService,
+    private readonly barsService: BarsService,
   ) {}
 
-  public async findOneById(
-    id: number,
-    fulfillResourcesProbabilities?: boolean,
-  ): Promise<Level> {
+  public async findOneById(id: number): Promise<Level> {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       id,
     });
@@ -28,19 +25,13 @@ export class LevelsService {
       throw new NotFoundException('Level not found');
     }
     const level = this.levelsEntityConverter.toModel(levelEntity);
-    const resourcesResponse: Resource[] =
-      await this.resourcesService.getResourcesByLevelId(
-        level.id,
-        fulfillResourcesProbabilities,
-      );
-    this.injectResourcesByGroups(resourcesResponse, level);
+
+    // TODO - Fetch bars
+
     return level;
   }
 
-  public async findOneByLevelOrder(
-    order: number,
-    fulfillResourcesProbabilities?: boolean,
-  ): Promise<Level> {
+  public async findOneByLevelOrder(order: number): Promise<Level> {
     const levelEntity: LevelEntity = await this.levelsRepository.findOneBy({
       order,
     });
@@ -48,12 +39,9 @@ export class LevelsService {
       throw new NotFoundException('Level not found');
     }
     const level = this.levelsEntityConverter.toModel(levelEntity);
-    const resourcesResponse: Resource[] =
-      await this.resourcesService.getResourcesByLevelId(
-        level.id,
-        fulfillResourcesProbabilities,
-      );
-    this.injectResourcesByGroups(resourcesResponse, level);
+
+    // TODO - Fetch bars
+
     return level;
   }
 
@@ -67,21 +55,20 @@ export class LevelsService {
   public async create(level: Level): Promise<Level> {
     let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
     levelEntity = await this.levelsRepository.save(levelEntity);
+
+    const comboBars: Bar[] = await this.barsService.createComboBars(
+      levelEntity.id,
+      level.combo.bars,
+    );
+    const goalsBars: Bar[] = await this.barsService.createGoalsBars(
+      levelEntity.id,
+      level.goals,
+    );
+
     level = this.levelsEntityConverter.toModel(levelEntity);
-
-    const resourcesResponse: Resource[] =
-      await this.resourcesService.createLevelResources(level);
-    this.injectResourcesByGroups(resourcesResponse, level);
+    level.combo = new Combo({ bars: comboBars });
+    level.goals = goalsBars;
     return level;
-  }
-
-  public async update(id: number, level: Level): Promise<Level> {
-    let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
-    if (levelEntity == null) {
-      throw new NotFoundException('Level not found');
-    }
-    levelEntity = await this.levelsRepository.save(levelEntity);
-    return this.levelsEntityConverter.toModel(levelEntity);
   }
 
   public async remove(id: number): Promise<void> {
@@ -92,21 +79,8 @@ export class LevelsService {
       throw new NotFoundException('Level not found');
     }
 
-    await this.resourcesService.removeResourcesByLevelId(id);
+    // TODO - Remove bars
 
     await this.levelsRepository.delete(id);
-  }
-
-  private injectResourcesByGroups(resources: Resource[], level: Level): void {
-    for (const resource of resources) {
-      if (resource.groupId) {
-        const split = resource.groupId.split('-');
-        if (split[0] == LevelResourcesGroups.COMBO_BAR_REWARDS) {
-          level.combo.bars[split[1]].resources = resource;
-        } else if (split[0] == LevelResourcesGroups.GOALS_REWARDS) {
-          level.goals[split[1]].resources = resource;
-        }
-      }
-    }
   }
 }

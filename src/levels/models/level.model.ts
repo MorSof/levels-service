@@ -1,7 +1,7 @@
 import { Stats } from './stats.model';
 import { Combo } from '../combo/models/combo.model';
 import { Playable } from '../playable/models/playable.model';
-import { Bar } from '../bar/models/bar.model';
+import { Bar } from '../../bars/models/bar.model';
 
 export class Level {
   id: number;
@@ -14,6 +14,10 @@ export class Level {
 
   constructor(partial: Partial<Level>) {
     Object.assign(this, partial);
+    this.calcStats(partial);
+  }
+
+  calcStats(partial: Partial<Level>) {
     if (partial.stats) {
       return;
     }
