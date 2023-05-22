@@ -1,6 +1,10 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Level } from '../models/level.model';
 import { LevelsEntityConverter } from './levels-entity.converter';
 import { LevelEntity } from '../entities/level.entity';
@@ -56,6 +60,8 @@ export class LevelsService {
 
   public async create(level: Level): Promise<Level> {
     let levelEntity: LevelEntity = this.levelsEntityConverter.toEntity(level);
+    await this.validateLevelDoesNotExists(levelEntity);
+
     levelEntity = await this.levelsRepository.save(levelEntity);
 
     const comboBarsPromise = this.barsService.createBars(
@@ -115,5 +121,16 @@ export class LevelsService {
     level.combo = new Combo({ bars: comboBars });
     level.goals = goalsBars;
     return level;
+  }
+
+  private async validateLevelDoesNotExists(levelEntity: LevelEntity) {
+    const entity = await this.levelsRepository.findOneBy({
+      order: levelEntity.order,
+    });
+    if (entity) {
+      throw new ConflictException(
+        `level with order number ${levelEntity.order} is already exists`,
+      );
+    }
   }
 }
