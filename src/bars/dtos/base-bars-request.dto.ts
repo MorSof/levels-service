@@ -1,12 +1,12 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
-import { ResourceRequestDto } from './resource-request.dto';
+import { BaseResourceRequestDto } from './base-resource-request.dto';
 
 /**
   Added the MilestoneRequestDto class just for swagger documentation,
-  because it didn't allow me to use the BarsRequestDto type in the ApiModelProperty of the milestones,
+  because it didn't allow me to use the BaseBarsRequestDto type in the ApiModelProperty of the milestones,
   because it's not yet declared.
   Also, this object doesn't include the MilestoneRequestDto too, for the same reason.
-  Take a look at the BarsRequestDto and see that the type of milestones is BarsRequestDto and not MilestoneRequestDto,
+  Take a look at the BaseBarsRequestDto and see that the type of milestones is BaseBarsRequestDto and not MilestoneRequestDto,
   so a milestone is also a bar that contains milestones
 **/
 export class MilestoneRequestDto {
@@ -20,13 +20,13 @@ export class MilestoneRequestDto {
 
   @ApiModelProperty({
     isArray: true,
-    type: ResourceRequestDto,
+    type: BaseResourceRequestDto,
     description: 'An array of rewards for the bar',
   })
-  rewards?: ResourceRequestDto[];
+  rewards?: BaseResourceRequestDto[];
 }
 
-export class BarsRequestDto {
+export class BaseBarsRequestDto {
   @ApiModelProperty({
     type: 'number',
     description: 'The max value to fill the bar',
@@ -40,12 +40,12 @@ export class BarsRequestDto {
     type: MilestoneRequestDto,
     description: 'An array of milestones in the bar',
   })
-  milestones?: BarsRequestDto[];
+  milestones?: BaseBarsRequestDto[];
 
   @ApiModelProperty({
     isArray: true,
-    type: ResourceRequestDto,
+    type: BaseResourceRequestDto,
     description: 'An array of rewards for the bar',
   })
-  rewards?: ResourceRequestDto[];
+  rewards?: BaseResourceRequestDto[];
 }

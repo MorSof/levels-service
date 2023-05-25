@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Bar } from '../models/bar.model';
-import { BarsRequestDto } from '../dtos/bars-request.dto';
+import { BaseBarsRequestDto } from '../dtos/base-bars-request.dto';
 import { BarsResponseDto } from '../dtos/bars-response.dto';
 import { ResourcesDtoConverter } from './resources-dto.converter';
 
@@ -8,7 +8,7 @@ import { ResourcesDtoConverter } from './resources-dto.converter';
 export class BarsDtoConverter {
   constructor(private readonly resourcesDtoConverter: ResourcesDtoConverter) {}
 
-  public toModel(barsRequestDto: BarsRequestDto): Bar {
+  public toModel(barsRequestDto: BaseBarsRequestDto): Bar {
     const { maxValue, rewards, milestones } = barsRequestDto;
     return new Bar({
       maxValue,

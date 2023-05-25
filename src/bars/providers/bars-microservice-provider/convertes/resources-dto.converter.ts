@@ -12,6 +12,7 @@ export class ResourcesDtoConverter {
       type,
       receivingProbability,
       rarenessProbability,
+      resources,
       extraArgs,
     } = resourceResponseDto;
     return new Resource({
@@ -20,6 +21,7 @@ export class ResourcesDtoConverter {
       type,
       receivingProbability,
       rarenessProbability,
+      resources,
       extraArgs,
     });
   }
@@ -31,6 +33,7 @@ export class ResourcesDtoConverter {
       type,
       receivingProbability,
       rarenessProbability,
+      resources,
       extraArgs,
     } = resource;
     return new CreateResourceRequestDto({
@@ -39,6 +42,7 @@ export class ResourcesDtoConverter {
       type,
       receivingProbability,
       rarenessProbability,
+      resources,
       extraArgs,
     });
   }

@@ -1,10 +1,10 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
-import { BarsRequestDto } from '../../../bars/dtos/bars-request.dto';
+import { BaseBarsRequestDto } from '../../../bars/dtos/base-bars-request.dto';
 
 export class ComboRequestDto {
   @ApiModelProperty({
-    type: BarsRequestDto,
+    type: BaseBarsRequestDto,
     isArray: true,
   })
-  bars: BarsRequestDto[];
+  bars: BaseBarsRequestDto[];
 }
