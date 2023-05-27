@@ -2,17 +2,17 @@ import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-prop
 import { ResourceResponseDto } from './resource-response.dto';
 
 /**
- Added the MilestoneRequestDto class just for swagger documentation,
- because it didn't allow me to use the BaseBarsRequestDto type in the ApiModelProperty of the milestones,
+ Added the MilestoneResponseDto class just for swagger documentation,
+ because it didn't allow me to use the BarsResponseDto type in the ApiModelProperty of the milestones,
  because it's not yet declared.
  Also, this object doesn't include the MilestoneRequestDto too, for the same reason.
- Take a look at the BaseBarsRequestDto and see that the type of milestones is BaseBarsRequestDto and not MilestoneRequestDto,
+ Take a look at the BarsResponseDto and see that the type of milestones is BarsResponseDto and not MilestoneResponseDto,
  so a milestone is also a bar that contains milestones
  **/
 export class MilestoneResponseDto {
   @ApiModelProperty({
     type: 'number',
-    description: 'The max value to fill the milestone bar',
+    description: 'The max value to fill the bar`s milestones',
     default: 50,
   })
   maxValue: number;
