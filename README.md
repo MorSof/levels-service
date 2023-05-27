@@ -7,27 +7,11 @@
 ### Run all services with docker compose
 
 #### Prerequisites
-clone rings-quest-ops from###########
+Clone 'levels-service' and 'rings-quest-ops' repos from https://github.com/MorSof?tab=repositories
 
-Before you run on docker, make sure that you have the following requirements installed on your system:
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+Be sure to complete the guideline of 'rings-quest-ops' README file before proceeding to the instructions below
 
-#### Pull and run from dockerhub in rings-quest-ops
-```shell
-$ docker-compose pull
-$ docker-compose up
-````
 
-On the first time running this, the app container should be failed:
-1. Go to the DB section below and follow the orders there
-2. 
-   ```shell
-   $ docker-compose down
-   $ docker-compose up
-   ````
-
-Now all the containers should work!
 
 The service is exposed on http://localhost:3001
 
@@ -37,12 +21,6 @@ OpenApi (Swagger) is exposed here http://localhost:3001/api
 ## Development
 
 ### Prerequisites
-
-Before you begin, make sure that you have the following requirements installed on your system:
-- [Node.js](https://nodejs.org/) (version 12 or higher)
-- [npm](https://www.npmjs.com/) (version v18.12.1)
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Installation
 
