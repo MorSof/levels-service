@@ -1,3 +1,4 @@
+import { LevelOwnerProgressionEntity } from 'src/levels-owners-prograssion/entities/level-owner-progression.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -5,6 +6,7 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -38,6 +40,12 @@ export class LevelEntity {
       total: number;
     };
   };
+
+  @OneToMany(
+    () => LevelOwnerProgressionEntity,
+    (progression: LevelOwnerProgressionEntity) => progression.levelOrder,
+  )
+  progressions: LevelOwnerProgressionEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

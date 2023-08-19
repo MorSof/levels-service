@@ -91,6 +91,106 @@ paths:
               schema:
                 $ref: '#/components/schemas/LevelResponseDto'
 
+  /level-owner-progressions:
+    get:
+      tags:
+        - level-owner-progressions
+      summary: Get all level owner progressions
+      parameters:
+        - name: ownerId
+          in: query
+          description: ID of the owner
+          required: false
+          schema:
+            type: string
+        - name: ownerType
+          in: query
+          description: Type of the owner
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of level owner progressions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LevelOwnerProgressionResponseDto'
+    post:
+      tags:
+        - level-owner-progressions
+      summary: Create a new level owner progression
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LevelOwnerProgressionRequestDto'
+      responses:
+        '201':
+          description: The created level owner progression
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LevelOwnerProgressionResponseDto'
+
+  /level-owner-progressions/{id}:
+    get:
+      tags:
+        - level-owner-progressions
+      summary: Get level owner progression by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: The level owner progression record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LevelOwnerProgressionResponseDto'
+        '404':
+          description: Level owner progression not found
+    put:
+      tags:
+        - level-owner-progressions
+      summary: Update level owner progression by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LevelOwnerProgressionRequestDto'
+      responses:
+        '200':
+          description: Updated level owner progression
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LevelOwnerProgressionResponseDto'
+    delete:
+      tags:
+        - level-owner-progressions
+      summary: Delete level owner progression by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        '204':
+          description: Successfully deleted
+
 components:
   schemas:
     ResourceResponseDto:
@@ -372,3 +472,40 @@ components:
             $ref: '#/components/schemas/BarsResponseDto'
         combo:
           $ref: '#/components/schemas/ComboResponseDto'
+
+    LevelOwnerProgressionRequestDto:
+      type: object
+      properties:
+        ownerType:
+          type: string
+        ownerId:
+          type: string
+        levelOrder:
+          type: number
+        score:
+          type: number
+      required:
+        - ownerType
+        - ownerId
+        - levelOrder
+        - score
+
+    LevelOwnerProgressionResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        ownerType:
+          type: string
+        ownerId:
+          type: string
+        levelOrder:
+          type: number
+        score:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
