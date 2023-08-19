@@ -1,0 +1,374 @@
+openapi: '3.0.0'
+info:
+  title: Your API Title
+  version: '1.0.0'
+
+paths:
+  /levels/{id}:
+    get:
+      tags:
+        - levels
+      summary: Get level by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: The level record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LevelResponseDto'
+        '404':
+          description: Level not found
+
+    delete:
+      tags:
+        - levels
+      summary: Delete level by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        '204':
+          description: Successfully deleted
+
+  /levels/order/{order}:
+    get:
+      tags:
+        - levels
+      summary: Get level by order
+      parameters:
+        - name: order
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: The level record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LevelResponseDto'
+        '404':
+          description: Level not found
+
+  /levels:
+    get:
+      tags:
+        - levels
+      summary: Get all levels
+      responses:
+        '200':
+          description: The level records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LevelResponseDto'
+    post:
+      tags:
+        - levels
+      summary: Create a new level
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LevelRequestDto'
+      responses:
+        '200':
+          description: The level record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LevelResponseDto'
+
+components:
+  schemas:
+    ResourceResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        type:
+          type: string
+        name:
+          type: string
+        amount:
+          type: number
+        receivingProbability:
+          type: number
+        rarenessProbability:
+          type: number
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceResponseDto'
+        extraArgs:
+          type: object
+
+    BaseResourceRequestDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'The type of the resource'
+          default: 'wrapper'
+        name:
+          type: string
+          description: 'The name of the resource'
+          default: 'chest'
+        amount:
+          type: number
+          nullable: true
+          default: null
+        receivingProbability:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 1
+          default: 1
+        rarenessProbability:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 1
+          default: 0.5
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseResourceRequestDto'
+          description: 'An array of resources in the resource'
+          nullable: true
+        extraArgs:
+          type: object
+          additionalProperties: true
+          nullable: true
+
+    BaseBarsRequestDto:
+      type: object
+      properties:
+        maxValue:
+          type: number
+          default: 100
+        milestones:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseBarsRequestDto'
+        rewards:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseResourceRequestDto'
+
+    MilestoneResponseDto:
+      type: object
+      properties:
+        maxValue:
+          type: number
+          default: 50
+        rewards:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceResponseDto'
+
+    BarsResponseDto:
+      allOf:
+        - $ref: '#/components/schemas/BaseBarsRequestDto'
+        - type: object
+          properties:
+            id:
+              type: number
+            name:
+              type: string
+            barIndex:
+              type: number
+            milestones:
+              type: array
+              items:
+                $ref: '#/components/schemas/MilestoneResponseDto'
+            rewards:
+              type: array
+              items:
+                $ref: '#/components/schemas/ResourceResponseDto'
+
+    ComboRequestDto:
+      type: object
+      properties:
+        bars:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseBarsRequestDto'
+
+    ComboResponseDto:
+      type: object
+      properties:
+        bars:
+          type: array
+          items:
+            $ref: '#/components/schemas/BarsResponseDto'
+
+    PlayableRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+        ttl:
+          type: number
+        interactableTime:
+          type: number
+        cooldown:
+          type: number
+        score:
+          type: number
+        vertices:
+          type: array
+          items:
+            type: number
+
+    PlayableResponseDto:
+      allOf:
+        - $ref: '#/components/schemas/PlayableRequestDto'
+        - type: object
+          properties:
+            interactableTime:
+              type: number
+
+    LevelRequestDto:
+      type: object
+      properties:
+        order:
+          type: number
+        playables:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlayableRequestDto'
+        goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseBarsRequestDto'
+        lives:
+          type: number
+        combo:
+          $ref: '#/components/schemas/ComboRequestDto'
+      example:
+        order: 0
+        playables:
+          - name: "string"
+            ttl: 0
+            interactableTime: 0
+            cooldown: 0
+            score: 0
+            vertices:
+              - 0
+        goals:
+          - maxValue: 100
+            milestones:
+              - maxValue: 50
+                rewards:
+                  - type: "wrapper"
+                    name: "chest"
+                    amount: null
+                    receivingProbability: 1
+                    rarenessProbability: 0.5
+                    resources:
+                      - type: "currency"
+                        name: "coins"
+                        amount: null
+                        receivingProbability: 1
+                        rarenessProbability: 0.5
+                        extraArgs:
+                          additionalProp1: { }
+                    extraArgs:
+                      additionalProp1: { }
+            rewards:
+              - type: "wrapper"
+                name: "chest"
+                amount: null
+                receivingProbability: 1
+                rarenessProbability: 0.5
+                resources:
+                  - type: "currency"
+                    name: "coins"
+                    amount: null
+                    receivingProbability: 1
+                    rarenessProbability: 0.5
+                    extraArgs:
+                      additionalProp1: { }
+                extraArgs:
+                  additionalProp1: { }
+        lives: 0
+        combo:
+          bars:
+            - maxValue: 100
+              milestones:
+                - maxValue: 50
+                  rewards:
+                    - type: "wrapper"
+                      name: "chest"
+                      amount: null
+                      receivingProbability: 1
+                      rarenessProbability: 0.5
+                      resources:
+                        - type: "currency"
+                          name: "coins"
+                          amount: null
+                          receivingProbability: 1
+                          rarenessProbability: 0.5
+                          extraArgs:
+                            additionalProp1: { }
+                      extraArgs:
+                        additionalProp1: { }
+              rewards:
+                - type: "wrapper"
+                  name: "chest"
+                  amount: null
+                  receivingProbability: 1
+                  rarenessProbability: 0.5
+                  resources:
+                    - type: "currency"
+                      name: "coins"
+                      amount: null
+                      receivingProbability: 1
+                      rarenessProbability: 0.5
+                      extraArgs:
+                        additionalProp1: { }
+                  extraArgs:
+                    additionalProp1: { }
+
+    LevelResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        order:
+          type: number
+        playables:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlayableResponseDto'
+        stats:
+          type: object
+          properties:
+            playables:
+              type: object
+              properties:
+                countByName:
+                  type: object
+                total:
+                  type: number
+        lives:
+          type: number
+        goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/BarsResponseDto'
+        combo:
+          $ref: '#/components/schemas/ComboResponseDto'

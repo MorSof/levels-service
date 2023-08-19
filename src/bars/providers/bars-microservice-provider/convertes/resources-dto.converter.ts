@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceResponseDto } from '../dtos/resource-response.dto';
 import { Resource } from '../../../models/resource.model';
-import { CreateResourceRequestDto } from '../dtos/create-resource-request.dto';
-
+import {
+  ResourceRequestDto,
+  ResourceResponseDto,
+} from '@morsof/bars-service-api';
 @Injectable()
 export class ResourcesDtoConverter {
   public toModel(resourceResponseDto: ResourceResponseDto): Resource {
@@ -26,7 +27,7 @@ export class ResourcesDtoConverter {
     });
   }
 
-  public toDto(resource: Resource): CreateResourceRequestDto {
+  public toDto(resource: Resource): ResourceResponseDto {
     const {
       name,
       amount,
@@ -36,14 +37,14 @@ export class ResourcesDtoConverter {
       resources,
       extraArgs,
     } = resource;
-    return new CreateResourceRequestDto({
-      name,
-      amount,
-      type,
-      receivingProbability,
-      rarenessProbability,
-      resources,
-      extraArgs,
-    });
+    const resourceRequestDto = new ResourceRequestDto();
+    resourceRequestDto.name = name;
+    resourceRequestDto.amount = amount;
+    resourceRequestDto.type = type;
+    resourceRequestDto.receivingProbability = receivingProbability;
+    resourceRequestDto.rarenessProbability = rarenessProbability;
+    resourceRequestDto.resources = resources;
+    resourceRequestDto.extraArgs = extraArgs;
+    return resourceRequestDto;
   }
 }

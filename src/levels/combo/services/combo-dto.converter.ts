@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ComboRequestDto } from '../dtos/combo-request.dto';
 import { Combo } from '../models/combo.model';
-import { ComboResponseDto } from '../dtos/combo-response.dto';
 import { BarsDtoConverter } from '../../../bars/convertes/bars-dto.converter';
+import { ComboRequestDto, ComboResponseDto } from '../../../api/build';
 
 @Injectable()
 export class ComboDtoConverter {
@@ -16,9 +15,10 @@ export class ComboDtoConverter {
   }
 
   public toDto(combo: Combo): ComboResponseDto {
-    const { bars } = combo;
-    return new ComboResponseDto({
-      bars: bars.map((bar) => this.barDtoConverter.toDto(bar)),
-    });
+    const comboResponseDto = new ComboResponseDto();
+    comboResponseDto.bars = combo.bars.map((bar) =>
+      this.barDtoConverter.toDto(bar),
+    );
+    return comboResponseDto;
   }
 }

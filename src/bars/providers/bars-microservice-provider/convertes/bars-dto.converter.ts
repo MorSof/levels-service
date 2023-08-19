@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ResourcesDtoConverter } from './resources-dto.converter';
 import { Bar } from '../../../models/bar.model';
-import { BarResponseDto } from '../dtos/bar-response.dto';
-import { CreateBarRequestDto } from '../dtos/create-bar-request.dto';
+import { BarsRequestDto, BarsResponseDto } from '@morsof/bars-service-api';
 
 @Injectable()
 export class BarsDtoConverter {
   constructor(private readonly resourcesDtoConverter: ResourcesDtoConverter) {}
 
-  public toModel(barResponseDto: BarResponseDto): Bar {
+  public toModel(barResponseDto: BarsResponseDto): Bar {
     const { id, name, barIndex, maxValue, rewards, milestones } =
       barResponseDto;
     return new Bar({
@@ -23,16 +22,18 @@ export class BarsDtoConverter {
     });
   }
 
-  public toDto(bar: Bar): CreateBarRequestDto {
+  public toDto(bar: Bar): BarsRequestDto {
     const { name, barIndex, maxValue, rewards, milestones } = bar;
-    return new CreateBarRequestDto({
-      name,
-      barIndex,
-      maxValue,
-      rewards: rewards?.map((reward) =>
-        this.resourcesDtoConverter.toDto(reward),
-      ),
-      milestones: milestones?.map((milestone) => this.toDto(milestone)),
-    });
+    const barsRequestDto = new BarsRequestDto();
+    barsRequestDto.name = name;
+    barsRequestDto.barIndex = barIndex;
+    barsRequestDto.maxValue = maxValue;
+    barsRequestDto.rewards = rewards?.map((reward) =>
+      this.resourcesDtoConverter.toDto(reward),
+    );
+    barsRequestDto.milestones = milestones?.map((milestone) =>
+      this.toDto(milestone),
+    );
+    return barsRequestDto;
   }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Playable } from '../models/playable.model';
-import { PlayableRequestDto } from '../dtos/playable-request.dto';
-import { PlayableResponseDto } from '../dtos/playable-response.dto';
+import { PlayableRequestDto, PlayableResponseDto } from '../../../api/build';
 
 @Injectable()
 export class PlayableDtoConverter {
@@ -19,14 +18,13 @@ export class PlayableDtoConverter {
   }
 
   public convertTo(playable: Playable): PlayableResponseDto {
-    const { name, ttl, interactableTime, cooldown, vertices, score } = playable;
-    return new PlayableResponseDto({
-      name,
-      ttl,
-      interactableTime,
-      cooldown,
-      vertices,
-      score,
-    });
+    const playableResponseDto = new PlayableResponseDto();
+    playableResponseDto.name = playable.name;
+    playableResponseDto.ttl = playable.ttl;
+    playableResponseDto.interactableTime = playable.interactableTime;
+    playableResponseDto.cooldown = playable.cooldown;
+    playableResponseDto.vertices = playable.vertices;
+    playableResponseDto.score = playable.score;
+    return playableResponseDto;
   }
 }

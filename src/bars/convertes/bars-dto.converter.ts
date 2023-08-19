@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Bar } from '../models/bar.model';
-import { BaseBarsRequestDto } from '../dtos/base-bars-request.dto';
-import { BarsResponseDto } from '../dtos/bars-response.dto';
 import { ResourcesDtoConverter } from './resources-dto.converter';
+import { BarsResponseDto, BaseBarsRequestDto } from '../../api/build';
 
 @Injectable()
 export class BarsDtoConverter {
@@ -20,16 +19,17 @@ export class BarsDtoConverter {
   }
 
   public toDto(bar: Bar): BarsResponseDto {
-    const { id, name, barIndex, maxValue, rewards, milestones } = bar;
-    return new BarsResponseDto({
-      id,
-      name,
-      barIndex,
-      maxValue,
-      rewards: rewards?.map((reward) =>
-        this.resourcesDtoConverter.convertTo(reward),
-      ),
-      milestones: milestones?.map((milestone) => this.toDto(milestone)),
-    });
+    const barResponseDto = new BarsResponseDto();
+    barResponseDto.id = bar.id;
+    barResponseDto.name = bar.name;
+    barResponseDto.barIndex = bar.barIndex;
+    barResponseDto.maxValue = bar.maxValue;
+    barResponseDto.rewards = bar.rewards?.map((reward) =>
+      this.resourcesDtoConverter.convertTo(reward),
+    );
+    barResponseDto.milestones = bar.milestones?.map((milestone) =>
+      this.toDto(milestone),
+    );
+    return barResponseDto;
   }
 }

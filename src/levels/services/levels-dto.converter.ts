@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Level } from '../models/level.model';
-import { LevelRequestDto } from '../dtos/level-request.dto';
-import { LevelResponseDto } from '../dtos/level-response.dto';
 import { ComboDtoConverter } from '../combo/services/combo-dto.converter';
 import { PlayableDtoConverter } from '../playable/services/playable-dto-converter.service';
 import { BarsDtoConverter } from '../../bars/convertes/bars-dto.converter';
+import { LevelRequestDto, LevelResponseDto } from '../../api/build';
 
 @Injectable()
 export class LevelsDtoConverter {
@@ -29,16 +28,18 @@ export class LevelsDtoConverter {
 
   public toDto(level: Level): LevelResponseDto {
     const { id, order, playables, lives, combo, stats, goals } = level;
-    return new LevelResponseDto({
-      id,
-      order,
-      playables: playables.map((playable) =>
-        this.playableDtoConverter.convertTo(playable),
-      ),
-      lives,
-      stats,
-      combo: this.comboDtoConverter.toDto(combo),
-      goals: goals.map((goal) => this.barDtoConverter.toDto(goal)),
-    });
+    const levelResponseDto = new LevelResponseDto();
+    levelResponseDto.id = id;
+    levelResponseDto.order = order;
+    levelResponseDto.playables = playables.map((playable) =>
+      this.playableDtoConverter.convertTo(playable),
+    );
+    levelResponseDto.lives = lives;
+    levelResponseDto.combo = this.comboDtoConverter.toDto(combo);
+    levelResponseDto.goals = goals.map((goal) =>
+      this.barDtoConverter.toDto(goal),
+    );
+    levelResponseDto.stats = stats;
+    return levelResponseDto;
   }
 }
