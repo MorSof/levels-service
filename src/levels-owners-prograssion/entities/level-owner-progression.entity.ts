@@ -13,7 +13,6 @@ import {
 import { LevelEntity } from '../../levels/entities/level.entity';
 
 @Entity({ name: 'level_owner_progression' })
-@Unique(['ownerType', 'ownerId', 'levelOrder'])
 export class LevelOwnerProgressionEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -24,9 +23,10 @@ export class LevelOwnerProgressionEntity {
   @Column()
   ownerId: string;
 
-  @ManyToOne(() => LevelEntity, (level) => level.order)
-  @JoinColumn({ name: 'levelOrder' })
-  levelOrder: number;
+  @ManyToOne(() => LevelEntity, (level) => level.levelOwnerProgressionEntity, {
+    eager: true,
+  })
+  levelEntity: LevelEntity;
 
   @Column()
   score: number;

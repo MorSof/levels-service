@@ -5,9 +5,14 @@ import { LevelOwnerProgressionService } from './services/level-owner-progression
 import { LevelOwnerProgressionController } from './controllers/level-owner-progression.controller';
 import { LevelOwnerProgressionDtoConverter } from './services/level-owner-progression-dto.converter';
 import { LevelOwnerProgressionEntityConverter } from './services/level-owner-progression-entity.converter';
+import { LevelsModule } from '../levels/levels.module';
+import { LevelsEntityConverter } from '../levels/services/levels-entity.converter';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LevelOwnerProgressionEntity])],
+  imports: [
+    TypeOrmModule.forFeature([LevelOwnerProgressionEntity]),
+    LevelsModule,
+  ],
   providers: [
     LevelOwnerProgressionService,
     LevelOwnerProgressionDtoConverter,

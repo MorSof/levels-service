@@ -43,9 +43,10 @@ export class LevelEntity {
 
   @OneToMany(
     () => LevelOwnerProgressionEntity,
-    (progression: LevelOwnerProgressionEntity) => progression.levelOrder,
+    (levelOwnerProgressionEntity) => levelOwnerProgressionEntity.levelEntity,
+    { nullable: true },
   )
-  progressions: LevelOwnerProgressionEntity[];
+  levelOwnerProgressionEntity?: LevelOwnerProgressionEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

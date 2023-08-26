@@ -1,9 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { LevelOwnerProgressionEntity } from '../entities/level-owner-progression.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LevelOwnerProgressionEntityConverter } from './level-owner-progression-entity.converter';
 import { LevelOwnerProgression } from '../models/level-owner-progression.model';
+import { LevelsService } from 'src/levels/services/levels.service';
 
 @Injectable()
 export class LevelOwnerProgressionService {
@@ -11,27 +16,32 @@ export class LevelOwnerProgressionService {
     @InjectRepository(LevelOwnerProgressionEntity)
     private readonly repository: Repository<LevelOwnerProgressionEntity>,
     private readonly levelOwnerProgressionEntityConverter: LevelOwnerProgressionEntityConverter,
+    private readonly levelsService: LevelsService,
   ) {}
 
   async create(
     progression: LevelOwnerProgression,
   ): Promise<LevelOwnerProgression> {
-    const existingProgression = await this.repository.findOne({
-      where: {
-        ownerType: progression.ownerType,
-        ownerId: progression.ownerId,
-        levelOrder: progression.levelOrder,
-      },
-    });
+    const level = await this.levelsService.findOneByLevelOrder(
+      progression.levelOrder,
+    );
+    if (!level) {
+      throw new NotFoundException(
+        `The level with order ${progression.levelOrder} does not exist.`,
+      );
+    }
 
+    const existingProgression = await this.getOneProgression(progression);
     if (existingProgression) {
       throw new BadRequestException(
         'The combination of ownerId, ownerType, and levelOrder already exists.',
       );
     }
 
-    const entity =
-      this.levelOwnerProgressionEntityConverter.toEntity(progression);
+    const entity = this.levelOwnerProgressionEntityConverter.toEntity(
+      progression,
+      level,
+    );
 
     const savedEntity = await this.repository.save(entity);
     return this.levelOwnerProgressionEntityConverter.toModel(savedEntity);
@@ -49,15 +59,23 @@ export class LevelOwnerProgressionService {
     ownerId?: string,
     ownerType?: string,
   ): Promise<LevelOwnerProgression[]> {
-    const where: any = {};
+    const queryBuilder = this.repository
+      .createQueryBuilder('progression')
+      .innerJoinAndSelect('progression.levelEntity', 'level');
+
     if (ownerId) {
-      where.ownerId = ownerId;
-    }
-    if (ownerType) {
-      where.ownerType = ownerType;
+      queryBuilder.andWhere('progression.ownerId = :ownerId', { ownerId });
     }
 
-    const entities = await this.repository.find({ where });
+    if (ownerType) {
+      queryBuilder.andWhere('progression.ownerType = :ownerType', {
+        ownerType,
+      });
+    }
+
+    queryBuilder.orderBy('level.order', 'ASC');
+
+    const entities = await this.getAllProgression(ownerId, ownerType);
     return entities.map(this.levelOwnerProgressionEntityConverter.toModel);
   }
 
@@ -74,5 +92,45 @@ export class LevelOwnerProgressionService {
   async delete(id: number): Promise<boolean> {
     const result = await this.repository.delete(id);
     return result.affected !== 0;
+  }
+
+  private async getAllProgression(ownerId: string, ownerType: string) {
+    return await this.getProgressionQuery(ownerId, ownerType).getMany();
+  }
+
+  private async getOneProgression(progression: LevelOwnerProgression) {
+    return this.getProgressionQuery(
+      progression.ownerId,
+      progression.ownerType,
+      progression.levelOrder,
+    ).getOne();
+  }
+
+  private getProgressionQuery(
+    ownerId: string,
+    ownerType: string,
+    levelOrder?: number,
+  ): SelectQueryBuilder<LevelOwnerProgressionEntity> {
+    const queryBuilder = this.repository
+      .createQueryBuilder('progression')
+      .innerJoinAndSelect('progression.levelEntity', 'level');
+
+    if (ownerId) {
+      queryBuilder.andWhere('progression.ownerId = :ownerId', { ownerId });
+    }
+
+    if (ownerType) {
+      queryBuilder.andWhere('progression.ownerType = :ownerType', {
+        ownerType,
+      });
+    }
+
+    if (levelOrder) {
+      queryBuilder.andWhere('level.order = :levelOrder', { levelOrder });
+    }
+
+    queryBuilder.orderBy('level.order', 'ASC');
+
+    return queryBuilder;
   }
 }

@@ -39,7 +39,9 @@ export class LevelsService {
       order,
     });
     if (levelEntity == null) {
-      throw new NotFoundException('Level not found');
+      throw new NotFoundException(
+        `The level with order ${order} does not exist.`,
+      );
     }
     const level = this.levelsEntityConverter.toModel(levelEntity);
 

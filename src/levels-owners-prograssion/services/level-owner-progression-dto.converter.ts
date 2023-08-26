@@ -1,7 +1,9 @@
 import { LevelOwnerProgressionRequestDto } from '../../api/build/models/LevelOwnerProgressionRequestDto';
 import { LevelOwnerProgressionResponseDto } from '../../api/build/models/LevelOwnerProgressionResponseDto';
 import { LevelOwnerProgression } from '../models/level-owner-progression.model';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class LevelOwnerProgressionDtoConverter {
   toModel(dto: LevelOwnerProgressionRequestDto): LevelOwnerProgression {
     return new LevelOwnerProgression({
@@ -12,15 +14,13 @@ export class LevelOwnerProgressionDtoConverter {
     });
   }
 
-  toDto(entity: LevelOwnerProgression): LevelOwnerProgressionResponseDto {
+  toDto(model: LevelOwnerProgression): LevelOwnerProgressionResponseDto {
     return {
-      id: entity.id,
-      ownerType: entity.ownerType,
-      ownerId: entity.ownerId,
-      levelOrder: entity.levelOrder,
-      score: entity.score,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
+      id: model.id,
+      ownerType: model.ownerType,
+      ownerId: model.ownerId,
+      levelOrder: model.levelOrder,
+      score: model.score,
     };
   }
 }
