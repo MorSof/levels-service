@@ -1,10 +1,10 @@
 openapi: '3.0.0'
 info:
-  title: Your API Title
+  title: Levels Service API
   version: '1.0.0'
 
 paths:
-  /levels/{id}:
+  /v1/levels/{id}:
     get:
       tags:
         - levels
@@ -39,7 +39,7 @@ paths:
         '204':
           description: Successfully deleted
 
-  /levels/order/{order}:
+  /v1/levels/order/{order}:
     get:
       tags:
         - levels
@@ -60,7 +60,7 @@ paths:
         '404':
           description: Level not found
 
-  /levels:
+  /v1/levels:
     get:
       tags:
         - levels
@@ -91,7 +91,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LevelResponseDto'
 
-  /level-owner-progressions:
+  /v1/level-owner-progressions:
     get:
       tags:
         - level-owner-progressions
@@ -135,7 +135,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LevelOwnerProgressionResponseDto'
 
-  /level-owner-progressions/{id}:
+  /v1/level-owner-progressions/{id}:
     get:
       tags:
         - level-owner-progressions

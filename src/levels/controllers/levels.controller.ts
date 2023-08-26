@@ -9,12 +9,10 @@ import {
 } from '@nestjs/common';
 import { LevelsService } from '../services/levels.service';
 import { Level } from '../models/level.model';
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LevelsDtoConverter } from '../services/levels-dto.converter';
 import { LevelRequestDto, LevelResponseDto } from '../../api/build';
 
-@ApiTags('levels')
-@Controller('levels')
+@Controller('v1/levels')
 export class LevelsController {
   constructor(
     private readonly levelsService: LevelsService,

@@ -13,7 +13,7 @@ import { LevelOwnerProgressionDtoConverter } from '../services/level-owner-progr
 import { LevelOwnerProgressionRequestDto } from '../../api/build/models/LevelOwnerProgressionRequestDto';
 import { LevelOwnerProgressionResponseDto } from '../../api/build/models/LevelOwnerProgressionResponseDto';
 
-@Controller('level-owner-progressions')
+@Controller('v1/level-owner-progressions')
 export class LevelOwnerProgressionController {
   constructor(
     private readonly service: LevelOwnerProgressionService,
