@@ -21,30 +21,46 @@ export class LevelOwnerProgressionService {
 
   async create(
     progression: LevelOwnerProgression,
+    overrideExisting = true,
   ): Promise<LevelOwnerProgression> {
     const level = await this.levelsService.findOneByLevelOrder(
       progression.levelOrder,
     );
+
     if (!level) {
       throw new NotFoundException(
         `The level with order ${progression.levelOrder} does not exist.`,
       );
     }
 
-    const existingProgression = await this.getOneProgression(progression);
-    if (existingProgression) {
-      throw new BadRequestException(
-        'The combination of ownerId, ownerType, and levelOrder already exists.',
-      );
+    let entity = await this.getOneProgression(progression);
+    if (entity) {
+      if (overrideExisting) {
+        return await this.update(entity.id, progression);
+      } else {
+        throw new BadRequestException(
+          'The combination of ownerId, ownerType, and levelOrder already exists.',
+        );
+      }
     }
 
-    const entity = this.levelOwnerProgressionEntityConverter.toEntity(
+    entity = this.levelOwnerProgressionEntityConverter.toEntity(
       progression,
       level,
     );
 
     const savedEntity = await this.repository.save(entity);
     return this.levelOwnerProgressionEntityConverter.toModel(savedEntity);
+  }
+
+  async update(
+    id: number,
+    updatedProgression: LevelOwnerProgression,
+  ): Promise<LevelOwnerProgression | undefined> {
+    const entity =
+      this.levelOwnerProgressionEntityConverter.toEntity(updatedProgression);
+    await this.repository.update(id, entity);
+    return this.findById(id);
   }
 
   async findById(id: number): Promise<LevelOwnerProgression | undefined> {
@@ -79,27 +95,22 @@ export class LevelOwnerProgressionService {
     return entities.map(this.levelOwnerProgressionEntityConverter.toModel);
   }
 
-  async update(
-    id: number,
-    updatedProgression: LevelOwnerProgression,
-  ): Promise<LevelOwnerProgression | undefined> {
-    const entity =
-      this.levelOwnerProgressionEntityConverter.toEntity(updatedProgression);
-    await this.repository.update(id, entity);
-    return this.findById(id);
-  }
-
   async delete(id: number): Promise<boolean> {
     const result = await this.repository.delete(id);
     return result.affected !== 0;
   }
 
-  private async getAllProgression(ownerId: string, ownerType: string) {
+  private async getAllProgression(
+    ownerId: string,
+    ownerType: string,
+  ): Promise<LevelOwnerProgressionEntity[]> {
     return await this.getProgressionQuery(ownerId, ownerType).getMany();
   }
 
-  private async getOneProgression(progression: LevelOwnerProgression) {
-    return this.getProgressionQuery(
+  private async getOneProgression(
+    progression: LevelOwnerProgression,
+  ): Promise<LevelOwnerProgressionEntity> {
+    return await this.getProgressionQuery(
       progression.ownerId,
       progression.ownerType,
       progression.levelOrder,

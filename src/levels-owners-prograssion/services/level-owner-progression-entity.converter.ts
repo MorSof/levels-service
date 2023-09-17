@@ -11,12 +11,18 @@ export class LevelOwnerProgressionEntityConverter {
     model: LevelOwnerProgression,
     level?: Level,
   ): LevelOwnerProgressionEntity {
-    return new LevelOwnerProgressionEntity({
+    const entity = new LevelOwnerProgressionEntity({
+      id: model.id,
       ownerType: model.ownerType,
       ownerId: model.ownerId,
-      levelEntity: level ? this.levelEntityConverter.toEntity(level) : null,
       score: model.score,
     });
+
+    if (level) {
+      entity.levelEntity = this.levelEntityConverter.toEntity(level);
+    }
+
+    return entity;
   }
 
   toModel(entity: LevelOwnerProgressionEntity): LevelOwnerProgression {

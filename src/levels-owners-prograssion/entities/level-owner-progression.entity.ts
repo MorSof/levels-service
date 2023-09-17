@@ -5,17 +5,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  JoinColumn,
   BeforeInsert,
   BeforeUpdate,
-  Unique,
 } from 'typeorm';
 import { LevelEntity } from '../../levels/entities/level.entity';
 
 @Entity({ name: 'level_owner_progression' })
 export class LevelOwnerProgressionEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   ownerType: string;
