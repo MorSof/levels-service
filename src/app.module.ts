@@ -13,16 +13,27 @@ import { LevelOwnerProgressionModule } from './levels-owners-prograssion/level-o
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get<number>('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        entities: [LevelEntity, LevelOwnerProgressionEntity],
-        synchronize: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const config: any = {
+          type: 'postgres',
+          host: configService.get('DB_HOST'),
+          port: +configService.get<number>('DB_PORT'),
+          username: configService.get('DB_USERNAME'),
+          password: configService.get('DB_PASSWORD'),
+          database: configService.get('DB_NAME'),
+          entities: [LevelEntity, LevelOwnerProgressionEntity],
+          synchronize: true,
+        };
+
+        if (
+          configService.get('DB_HOST') != 'localhost' &&
+          configService.get('DB_HOST') != 'db'
+        ) {
+          config.ssl = { rejectUnauthorized: false };
+        }
+
+        return config;
+      },
       inject: [ConfigService],
     }),
     LevelsModule,
